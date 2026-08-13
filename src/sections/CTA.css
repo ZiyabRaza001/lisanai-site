@@ -1,0 +1,123 @@
+.cta {
+  position: relative;
+  padding: 120px 0;
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 50%, #0a7a70 100%);
+  overflow: hidden;
+}
+
+.cta__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.cta__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.25;
+}
+
+.cta__blob--1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent 70%);
+  top: -100px;
+  right: -50px;
+  animation: float 6s ease-in-out infinite;
+}
+
+.cta__blob--2 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(52, 183, 241, 0.5), transparent 70%);
+  bottom: -50px;
+  left: 10%;
+  animation: float 4s ease-in-out infinite 1s;
+}
+
+.cta__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.cta__content {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.cta__wa-icon {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.cta__title {
+  font-size: clamp(30px, 5vw, 50px);
+  font-weight: 900;
+  color: white;
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.cta__title-accent {
+  opacity: 0.85;
+}
+
+.cta__subtitle {
+  font-size: 18px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 500px;
+}
+
+.cta__actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cta__btn-primary {
+  background: white;
+  color: var(--secondary);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  gap: 10px;
+}
+
+.cta__btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.cta__perks {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.cta__perk {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .cta { padding: 80px 0; }
+  .cta__perks { gap: 12px; }
+  .cta__perk { font-size: 13px; }
+}

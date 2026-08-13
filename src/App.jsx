@@ -1,0 +1,34 @@
+import './App.css'
+import Navbar from './components/Navbar'
+import Hero from './sections/Hero'
+import LogoStrip from './sections/LogoStrip'
+import Features from './sections/Features'
+import Demo from './sections/Demo'
+import HowItWorks from './sections/HowItWorks'
+import Pricing from './sections/Pricing'
+import Testimonials from './sections/Testimonials'
+import FAQ from './sections/FAQ'
+import CTA from './sections/CTA'
+import Footer from './components/Footer'
+
+function App() {
+  return (
+    <>
+      <Navbar />
+      <main>
+        <Hero />
+        <LogoStrip />
+        <Features />
+        <Demo />
+        <HowItWorks />
+        <Pricing />
+        <Testimonials />
+        <FAQ />
+        <CTA />
+      </main>
+      <Footer />
+    </>
+  )
+}
+
+export default App
