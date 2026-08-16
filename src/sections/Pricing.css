@@ -234,6 +234,11 @@
   font-size: 15px;
   font-family: inherit;
   transition: var(--transition);
+  margin-bottom: 14px;
+}
+
+.pricing-card__phone-input:last-child {
+  margin-bottom: 0;
 }
 
 .pricing-card__phone-input:focus {

@@ -13,6 +13,7 @@ const features = [
 
 export default function Pricing() {
   const [showPhoneInput, setShowPhoneInput] = useState(false)
+  const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -35,6 +36,11 @@ export default function Pricing() {
       return
     }
 
+    if (!name.trim()) {
+      setError('Enter your name.')
+      return
+    }
+
     if (phone.trim().length < 6) {
       setError("Enter the WhatsApp number you'll message the bot from.")
       return
@@ -47,7 +53,7 @@ export default function Pricing() {
       const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: phone.trim() }),
+        body: JSON.stringify({ name: name.trim(), phone: phone.trim() }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Something went wrong')
@@ -122,13 +128,25 @@ export default function Pricing() {
 
             {showPhoneInput && (
               <div className="pricing-card__phone">
+                <label htmlFor="wa-name" className="pricing-card__phone-label">
+                  Your name
+                </label>
+                <input
+                  id="wa-name"
+                  type="text"
+                  autoFocus
+                  placeholder="Amina"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="pricing-card__phone-input"
+                />
+
                 <label htmlFor="wa-phone" className="pricing-card__phone-label">
                   Your WhatsApp number
                 </label>
                 <input
                   id="wa-phone"
                   type="tel"
-                  autoFocus
                   placeholder="+31 6 12345678"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}

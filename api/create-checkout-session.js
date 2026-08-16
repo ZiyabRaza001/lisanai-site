@@ -13,6 +13,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
+  const naam = typeof req.body?.name === 'string' ? req.body.name.trim().slice(0, 100) : ''
+
+  if (!naam) {
+    return res.status(400).json({ error: 'Enter your name' })
+  }
+
   const e164Phone = normalizePhone(req.body?.phone)
 
   if (!e164Phone) {
@@ -37,11 +43,11 @@ export default async function handler(req, res) {
         trial_period_days: 7,
         // Also set here (not just on the session) — Checkout Session metadata
         // isn't copied onto the Subscription automatically, and n8n reads
-        // this same field off subscription-lifecycle events too.
-        metadata: { telefoonnummer },
+        // these same fields off subscription-lifecycle events too.
+        metadata: { telefoonnummer, naam },
       },
       client_reference_id: telefoonnummer,
-      metadata: { telefoonnummer },
+      metadata: { telefoonnummer, naam },
       automatic_tax: { enabled: true },
       success_url: `${req.headers.origin}/?checkout=success`,
       cancel_url: `${req.headers.origin}/?checkout=cancelled`,
