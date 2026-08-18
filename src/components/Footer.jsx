@@ -42,7 +42,20 @@ export default function Footer() {
                 <ul className="footer__col-list">
                   {links.map(link => (
                     <li key={link}>
-                      <a href="#" className="footer__link">{link}</a>
+                      {link === 'Contact' ? (
+                        <a
+                          href="#contact"
+                          className="footer__link"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
+                          }}
+                        >
+                          {link}
+                        </a>
+                      ) : (
+                        <a href="#" className="footer__link">{link}</a>
+                      )}
                     </li>
                   ))}
                 </ul>

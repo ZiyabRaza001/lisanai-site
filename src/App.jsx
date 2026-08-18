@@ -9,6 +9,7 @@ import Pricing from './sections/Pricing'
 import Testimonials from './sections/Testimonials'
 import FAQ from './sections/FAQ'
 import CTA from './sections/CTA'
+import Contact from './sections/Contact'
 import Footer from './components/Footer'
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Testimonials />
         <FAQ />
         <CTA />
+        <Contact />
       </main>
       <Footer />
     </>
