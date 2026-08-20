@@ -24,7 +24,7 @@ export default function CTA() {
           </h2>
           <p className="cta__subtitle">
             Join 500+ learners studying Arabic right from WhatsApp.
-            14 days free to try — no credit card needed.
+            7 days free to try — no credit card needed.
           </p>
 
           <div className="cta__actions">
@@ -40,7 +40,7 @@ export default function CTA() {
           </div>
 
           <div className="cta__perks">
-            {['✓ 14 days free', '✓ No credit card', '✓ Cancel anytime', '✓ Works on any phone'].map((perk, i) => (
+            {['✓ 7 days free', '✓ No credit card', '✓ Cancel anytime', '✓ Works on any phone'].map((perk, i) => (
               <span key={i} className="cta__perk">{perk}</span>
             ))}
           </div>
