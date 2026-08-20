@@ -1,11 +1,12 @@
 import Stripe from 'stripe'
 import { normalizePhone } from './_lib/phone.js'
 import { findExistingStripeCustomerId } from './_lib/existing-customer.js'
+import { envVar } from './_lib/env.js'
 
 // Pinned to match the API version n8n's Stripe webhook destination is set to
 // (confirmed in its "API-versie" field) — keeps event payload shapes in sync
 // between what this creates and what n8n parses.
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2026-07-29.dahlia' })
+const stripe = new Stripe(envVar('STRIPE_SECRET_KEY'), { apiVersion: '2026-07-29.dahlia' })
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -34,7 +35,7 @@ export default async function handler(req, res) {
 
   const buildSessionParams = (customerId) => ({
     mode: 'subscription',
-    line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+    line_items: [{ price: envVar('STRIPE_PRICE_ID'), quantity: 1 }],
     // Reuse the customer if this phone already paid before (e.g. resubscribing
     // after a cancellation) — otherwise Stripe creates a new one automatically.
     ...(customerId ? { customer: customerId } : {}),

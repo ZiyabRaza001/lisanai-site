@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
+import { envVar } from './env.js'
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+const supabase = createClient(envVar('SUPABASE_URL'), envVar('SUPABASE_SERVICE_ROLE_KEY'))
 
 // Read-only lookup against the bot's own table — n8n still owns every write.
 // If this phone number already has a Stripe customer on file (e.g. they

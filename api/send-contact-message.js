@@ -1,6 +1,7 @@
 import { Resend } from 'resend'
+import { envVar } from './_lib/env.js'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(envVar('RESEND_API_KEY'))
 const CONTACT_EMAIL = 'lisanaiservice@outlook.com'
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 

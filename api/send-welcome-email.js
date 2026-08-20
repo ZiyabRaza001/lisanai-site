@@ -1,12 +1,13 @@
 import Stripe from 'stripe'
 import { Resend } from 'resend'
+import { envVar } from './_lib/env.js'
 
 // Separate Stripe webhook endpoint from n8n's — this one only sends the
 // welcome email, n8n still exclusively owns writing to Supabase. Register
 // this URL as its own webhook destination in Stripe (checkout.session.completed
 // only) and it gets its own signing secret, independent of n8n's.
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2026-07-29.dahlia' })
-const resend = new Resend(process.env.RESEND_API_KEY)
+const stripe = new Stripe(envVar('STRIPE_SECRET_KEY'), { apiVersion: '2026-07-29.dahlia' })
+const resend = new Resend(envVar('RESEND_API_KEY'))
 
 export const config = {
   api: {
@@ -33,7 +34,7 @@ export default async function handler(req, res) {
 
   try {
     const rawBody = await buffer(req)
-    event = stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET)
+    event = stripe.webhooks.constructEvent(rawBody, signature, envVar('STRIPE_WEBHOOK_SECRET'))
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message)
     return res.status(400).send(`Webhook Error: ${err.message}`)
@@ -43,7 +44,7 @@ export default async function handler(req, res) {
     const session = event.data.object
     const email = session.customer_details?.email
     const name = session.metadata?.naam || 'there'
-    const waNumber = process.env.VITE_WHATSAPP_NUMBER
+    const waNumber = envVar('VITE_WHATSAPP_NUMBER')
     const waLink = `https://wa.me/${waNumber}?text=start`
 
     if (email && waNumber) {
