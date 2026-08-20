@@ -30,28 +30,44 @@ export default async function handler(req, res) {
   // "whatsapp:+" itself — so send it plain, no "+" or "whatsapp:" prefix needed.
   const telefoonnummer = e164Phone.replace(/\D/g, '')
 
-  try {
-    const existingCustomerId = await findExistingStripeCustomerId(telefoonnummer)
+  const existingCustomerId = await findExistingStripeCustomerId(telefoonnummer)
 
-    const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
-      line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
-      // Reuse the customer if this phone already paid before (e.g. resubscribing
-      // after a cancellation) — otherwise Stripe creates a new one automatically.
-      ...(existingCustomerId ? { customer: existingCustomerId } : {}),
-      subscription_data: {
-        trial_period_days: 7,
-        // Also set here (not just on the session) — Checkout Session metadata
-        // isn't copied onto the Subscription automatically, and n8n reads
-        // these same fields off subscription-lifecycle events too.
-        metadata: { telefoonnummer, naam },
-      },
-      client_reference_id: telefoonnummer,
+  const buildSessionParams = (customerId) => ({
+    mode: 'subscription',
+    line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+    // Reuse the customer if this phone already paid before (e.g. resubscribing
+    // after a cancellation) — otherwise Stripe creates a new one automatically.
+    ...(customerId ? { customer: customerId } : {}),
+    subscription_data: {
+      trial_period_days: 7,
+      // Also set here (not just on the session) — Checkout Session metadata
+      // isn't copied onto the Subscription automatically, and n8n reads
+      // these same fields off subscription-lifecycle events too.
       metadata: { telefoonnummer, naam },
-      automatic_tax: { enabled: true },
-      success_url: `${req.headers.origin}/?checkout=success`,
-      cancel_url: `${req.headers.origin}/?checkout=cancelled`,
-    })
+    },
+    client_reference_id: telefoonnummer,
+    metadata: { telefoonnummer, naam },
+    automatic_tax: { enabled: true },
+    success_url: `${req.headers.origin}/?checkout=success`,
+    cancel_url: `${req.headers.origin}/?checkout=cancelled`,
+  })
+
+  try {
+    let session
+
+    try {
+      session = await stripe.checkout.sessions.create(buildSessionParams(existingCustomerId))
+    } catch (err) {
+      // A customer ID saved under test mode doesn't exist under live mode (and
+      // vice versa) — Stripe rejects the reference outright. Fall back to
+      // letting Stripe create a fresh customer rather than failing checkout.
+      if (existingCustomerId && err?.code === 'resource_missing') {
+        console.error('Stale stripe_customer_id, retrying without it:', existingCustomerId)
+        session = await stripe.checkout.sessions.create(buildSessionParams(null))
+      } else {
+        throw err
+      }
+    }
 
     res.status(200).json({ url: session.url })
   } catch (err) {
