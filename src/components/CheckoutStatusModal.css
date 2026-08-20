@@ -1,0 +1,88 @@
+.checkout-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.checkout-modal__card {
+  position: relative;
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+  animation: fadeInUp 0.3s ease;
+}
+
+.checkout-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-light);
+  color: var(--text-secondary);
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.checkout-modal__close:hover {
+  background: var(--bg-gray);
+  color: var(--text-primary);
+}
+
+.checkout-modal__icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.checkout-modal__title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.checkout-modal__text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.checkout-modal__number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+}
+
+.checkout-modal__cta {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.checkout-modal__note {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+  .checkout-modal__card {
+    padding: 32px 24px;
+  }
+}

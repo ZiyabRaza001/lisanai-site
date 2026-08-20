@@ -1,5 +1,6 @@
 import './App.css'
 import Navbar from './components/Navbar'
+import CheckoutStatusModal from './components/CheckoutStatusModal'
 import Hero from './sections/Hero'
 import LogoStrip from './sections/LogoStrip'
 import Features from './sections/Features'
@@ -15,6 +16,7 @@ import Footer from './components/Footer'
 function App() {
   return (
     <>
+      <CheckoutStatusModal />
       <Navbar />
       <main>
         <Hero />

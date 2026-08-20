@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './Pricing.css'
-import { waLink, waDisplayNumber } from '../lib/whatsapp'
 
 const features = [
   'Unlimited guided lessons',
@@ -17,18 +16,6 @@ export default function Pricing() {
   const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [checkoutStatus, setCheckoutStatus] = useState(null)
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const status = params.get('checkout')
-    if (status === 'success' || status === 'cancelled') {
-      setCheckoutStatus(status)
-      params.delete('checkout')
-      const query = params.toString()
-      window.history.replaceState({}, '', `${window.location.pathname}${query ? `?${query}` : ''}#pricing`)
-    }
-  }, [])
 
   const startCheckout = async () => {
     if (!showPhoneInput) {
@@ -76,27 +63,6 @@ export default function Pricing() {
           <p className="section-subtitle">
             Try LisanAI free for 7 days. Then lock in €2.49/week (normally €6) — cancel anytime.
           </p>
-
-          {checkoutStatus === 'success' && (
-            <div className="pricing__status pricing__status--success">
-              <p>🎉 You're in! Message this number on WhatsApp to start your free week:</p>
-              <p className="pricing__status-number">{waDisplayNumber()}</p>
-              <a
-                href={waLink('start')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary pricing__status-cta"
-              >
-                Message LisanAI on WhatsApp →
-              </a>
-              <p className="pricing__status-note">We've also sent this to your email — check spam if you don't see it.</p>
-            </div>
-          )}
-          {checkoutStatus === 'cancelled' && (
-            <div className="pricing__status pricing__status--cancelled">
-              Checkout cancelled — you weren't charged. Ready when you are.
-            </div>
-          )}
         </div>
 
         <div className="pricing__grid pricing__grid--single">

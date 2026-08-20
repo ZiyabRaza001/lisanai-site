@@ -252,49 +252,6 @@
   margin-bottom: 12px;
 }
 
-.pricing__status {
-  padding: 16px 24px;
-  border-radius: var(--radius-lg);
-  font-size: 14.5px;
-  font-weight: 600;
-  margin-top: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.pricing__status--success {
-  background: rgba(16, 185, 129, 0.12);
-  color: var(--success);
-}
-
-.pricing__status-number {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--text-primary);
-  letter-spacing: 0.5px;
-  margin: -4px 0 4px;
-}
-
-.pricing__status-cta {
-  font-weight: 700;
-}
-
-.pricing__status-note {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin-top: -4px;
-}
-
-.pricing__status--cancelled {
-  padding: 12px 20px;
-  border-radius: var(--radius-full);
-  background: var(--bg-gray);
-  color: var(--text-secondary);
-}
-
 .pricing-card__custom {
   font-size: 36px;
   font-weight: 900;
