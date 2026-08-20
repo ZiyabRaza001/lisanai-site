@@ -269,8 +269,23 @@
   color: var(--success);
 }
 
+.pricing__status-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+  margin: -4px 0 4px;
+}
+
 .pricing__status-cta {
   font-weight: 700;
+}
+
+.pricing__status-note {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-top: -4px;
 }
 
 .pricing__status--cancelled {

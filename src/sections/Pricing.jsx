@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './Pricing.css'
-import { waLink } from '../lib/whatsapp'
+import { waLink, waDisplayNumber } from '../lib/whatsapp'
 
 const features = [
   'Unlimited guided lessons',
@@ -79,7 +79,8 @@ export default function Pricing() {
 
           {checkoutStatus === 'success' && (
             <div className="pricing__status pricing__status--success">
-              <p>🎉 You're in! Message LisanAI on WhatsApp to start your free week.</p>
+              <p>🎉 You're in! Message this number on WhatsApp to start your free week:</p>
+              <p className="pricing__status-number">{waDisplayNumber()}</p>
               <a
                 href={waLink('start')}
                 target="_blank"
@@ -88,6 +89,7 @@ export default function Pricing() {
               >
                 Message LisanAI on WhatsApp →
               </a>
+              <p className="pricing__status-note">We've also sent this to your email — check spam if you don't see it.</p>
             </div>
           )}
           {checkoutStatus === 'cancelled' && (
