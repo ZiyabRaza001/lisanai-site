@@ -74,7 +74,7 @@ export default function Pricing() {
             <span className="pricing__title-accent">no surprises</span>
           </h2>
           <p className="section-subtitle">
-            Try LisanAI free for 7 days. Then lock in €2.99/week (normally €6) — cancel anytime.
+            Try LisanAI free for 7 days. Then lock in €2.49/week (normally €6) — cancel anytime.
           </p>
 
           {checkoutStatus === 'success' && (
@@ -110,14 +110,14 @@ export default function Pricing() {
 
             <div className="pricing-card__price">
               <span className="pricing-card__currency">€</span>
-              <span className="pricing-card__amount">2.99</span>
+              <span className="pricing-card__amount">2.49</span>
               <span className="pricing-card__period">/week</span>
             </div>
             <div className="pricing-card__discount-row">
               <span className="pricing-card__original">€6.00/week</span>
-              <span className="pricing-card__discount-flag">Save 50%</span>
+              <span className="pricing-card__discount-flag">Save 58%</span>
             </div>
-            <p className="pricing-card__price-note">Free for your first 7 days, then €2.99/week. Cancel before day 8 and pay nothing.</p>
+            <p className="pricing-card__price-note">Free for your first 7 days, then €2.49/week. Cancel before day 8 and pay nothing.</p>
 
             <ul className="pricing-card__features">
               {features.map((f, j) => (
