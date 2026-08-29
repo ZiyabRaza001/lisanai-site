@@ -35,7 +35,10 @@ export default async function handler(req, res) {
   // header is caller-supplied (curl and some clients omit it entirely, which
   // is what broke this during testing; a crafted request could also spoof it
   // to redirect post-payment somewhere else) — SITE_URL is not.
-  const siteUrl = envVar('SITE_URL') || req.headers.origin
+  // Strip any trailing slash — SITE_URL gets concatenated directly with a
+  // leading-slash path below, and a trailing slash on the env var would
+  // otherwise produce a double slash.
+  const siteUrl = (envVar('SITE_URL') || req.headers.origin)?.replace(/\/+$/, '')
 
   if (!siteUrl) {
     console.error('No SITE_URL configured and request had no Origin header')
