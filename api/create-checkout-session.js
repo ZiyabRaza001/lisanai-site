@@ -31,6 +31,17 @@ export default async function handler(req, res) {
   // "whatsapp:+" itself — so send it plain, no "+" or "whatsapp:" prefix needed.
   const telefoonnummer = e164Phone.replace(/\D/g, '')
 
+  // Prefer a fixed, trusted site URL over the request's Origin header — the
+  // header is caller-supplied (curl and some clients omit it entirely, which
+  // is what broke this during testing; a crafted request could also spoof it
+  // to redirect post-payment somewhere else) — SITE_URL is not.
+  const siteUrl = envVar('SITE_URL') || req.headers.origin
+
+  if (!siteUrl) {
+    console.error('No SITE_URL configured and request had no Origin header')
+    return res.status(500).json({ error: 'Could not start checkout' })
+  }
+
   const existingCustomerId = await findExistingStripeCustomerId(telefoonnummer)
 
   const buildSessionParams = (customerId) => ({
@@ -49,8 +60,8 @@ export default async function handler(req, res) {
     client_reference_id: telefoonnummer,
     metadata: { telefoonnummer, naam },
     automatic_tax: { enabled: true },
-    success_url: `${req.headers.origin}/?checkout=success`,
-    cancel_url: `${req.headers.origin}/?checkout=cancelled`,
+    success_url: `${siteUrl}/?checkout=success`,
+    cancel_url: `${siteUrl}/?checkout=cancelled`,
   })
 
   try {
