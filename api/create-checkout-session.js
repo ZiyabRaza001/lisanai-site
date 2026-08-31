@@ -63,7 +63,7 @@ export default async function handler(req, res) {
     client_reference_id: telefoonnummer,
     metadata: { telefoonnummer, naam },
     automatic_tax: { enabled: true },
-    success_url: `${siteUrl}/?checkout=success`,
+    success_url: `${siteUrl}/?checkout=success&name=${encodeURIComponent(naam)}`,
     cancel_url: `${siteUrl}/?checkout=cancelled`,
   })
 
