@@ -1,8 +1,13 @@
+import { useState } from 'react'
 import './Pricing.css'
+import { normalizePhone } from '../lib/phone'
 
-// Direct Stripe Payment Link — this bypasses the site's own name/phone form
-// entirely, so it carries no metadata.telefoonnummer/naam for n8n to match
-// a payment back to a WhatsApp number. Known and accepted tradeoff for now.
+// Direct Stripe Payment Link. It carries no arbitrary metadata of its own —
+// the only dynamic value Stripe lets a Payment Link URL pass through is
+// client_reference_id, which n8n's sync workflow already reads as its
+// fallback for the phone number when metadata.telefoonnummer is absent.
+// The name has no equivalent pass-through, so it's carried in sessionStorage
+// instead, purely for personalizing the pop-up after redirect.
 const DIRECT_PAYMENT_LINK = 'https://buy.stripe.com/9B6eVd8QwaRE9HK4bb8N201'
 
 const features = [
@@ -15,6 +20,35 @@ const features = [
 ]
 
 export default function Pricing() {
+  const [showPhoneInput, setShowPhoneInput] = useState(false)
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [error, setError] = useState('')
+
+  const startCheckout = () => {
+    if (!showPhoneInput) {
+      setShowPhoneInput(true)
+      return
+    }
+
+    if (!name.trim()) {
+      setError('Enter your name.')
+      return
+    }
+
+    const e164Phone = normalizePhone(phone)
+    if (!e164Phone) {
+      setError('Enter your WhatsApp number with country code, e.g. +31612345678')
+      return
+    }
+
+    setError('')
+
+    const telefoonnummer = e164Phone.replace(/\D/g, '')
+    sessionStorage.setItem('lisanai_checkout_name', name.trim())
+    window.location.href = `${DIRECT_PAYMENT_LINK}?client_reference_id=${telefoonnummer}`
+  }
+
   return (
     <section className="pricing" id="pricing">
       <div className="container">
@@ -58,9 +92,39 @@ export default function Pricing() {
               ))}
             </ul>
 
-            <a href={DIRECT_PAYMENT_LINK} className="btn btn-lg pricing-card__cta btn-primary">
-              Start my free week
-            </a>
+            {showPhoneInput && (
+              <div className="pricing-card__phone">
+                <label htmlFor="wa-name" className="pricing-card__phone-label">
+                  Your name
+                </label>
+                <input
+                  id="wa-name"
+                  type="text"
+                  autoFocus
+                  placeholder="Amina"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="pricing-card__phone-input"
+                />
+
+                <label htmlFor="wa-phone" className="pricing-card__phone-label">
+                  Your WhatsApp number
+                </label>
+                <input
+                  id="wa-phone"
+                  type="tel"
+                  placeholder="+31 6 12345678"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="pricing-card__phone-input"
+                />
+              </div>
+            )}
+            {error && <p className="pricing-card__error">{error}</p>}
+
+            <button className="btn btn-lg pricing-card__cta btn-primary" onClick={startCheckout}>
+              {showPhoneInput ? 'Continue to checkout' : 'Start my free week'}
+            </button>
           </div>
         </div>
 

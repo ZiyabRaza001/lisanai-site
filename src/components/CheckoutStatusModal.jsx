@@ -11,9 +11,12 @@ export default function CheckoutStatusModal() {
     const checkout = params.get('checkout')
     if (checkout === 'success' || checkout === 'cancelled') {
       setStatus(checkout)
-      setName(params.get('name') || '')
+      // The Payment Link's redirect is a fixed URL configured in Stripe's
+      // dashboard, so it can't carry a per-customer name as a query param —
+      // carried instead via sessionStorage, set right before the redirect.
+      setName(sessionStorage.getItem('lisanai_checkout_name') || '')
+      sessionStorage.removeItem('lisanai_checkout_name')
       params.delete('checkout')
-      params.delete('name')
       const query = params.toString()
       window.history.replaceState({}, '', `${window.location.pathname}${query ? `?${query}` : ''}`)
     }

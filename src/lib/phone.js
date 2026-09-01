@@ -1,8 +1,8 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
 
-// Normalizes any phone input to E.164 (e.g. +31612345678). Requires a leading
-// "+" with country code — WhatsApp numbers are meaningless without one, and
-// guessing a country from a bare local number is unreliable.
+// Same validation the old server-side flow used — now runs client-side since
+// there's no server round-trip needed before redirecting to a static Payment
+// Link. Requires a leading "+" with country code; rejects anything without one.
 export function normalizePhone(raw) {
   if (!raw || typeof raw !== 'string') return null
   const trimmed = raw.trim()
