@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import './Pricing.css'
 
+// Alternative direct-to-Stripe link, kept separate from the main flow above —
+// paying through this skips the name/phone form, so it won't carry the
+// metadata n8n uses to match a payment back to a WhatsApp number the same way.
+const DIRECT_PAYMENT_LINK = 'https://buy.stripe.com/9B6eVd8QwaRE9HK4bb8N201'
+
 const features = [
   'Unlimited guided lessons',
   'Voice note transcription & feedback',
@@ -127,6 +132,15 @@ export default function Pricing() {
             <button className="btn btn-lg pricing-card__cta btn-primary" onClick={startCheckout} disabled={loading}>
               {loading ? 'Redirecting…' : showPhoneInput ? 'Continue to checkout' : 'Start my free week'}
             </button>
+
+            <a
+              href={DIRECT_PAYMENT_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pricing-card__direct-link"
+            >
+              Prefer to pay directly on Stripe? Use this link instead
+            </a>
           </div>
         </div>
 

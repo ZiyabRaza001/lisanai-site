@@ -294,6 +294,21 @@
   width: 100%;
 }
 
+.pricing-card__direct-link {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  margin-top: 14px;
+  transition: var(--transition);
+}
+
+.pricing-card__direct-link:hover {
+  color: var(--text-secondary);
+}
+
 .pricing__guarantee {
   display: flex;
   align-items: center;
