@@ -1,9 +1,8 @@
-import { useState } from 'react'
 import './Pricing.css'
 
-// Alternative direct-to-Stripe link, kept separate from the main flow above —
-// paying through this skips the name/phone form, so it won't carry the
-// metadata n8n uses to match a payment back to a WhatsApp number the same way.
+// Direct Stripe Payment Link — this bypasses the site's own name/phone form
+// entirely, so it carries no metadata.telefoonnummer/naam for n8n to match
+// a payment back to a WhatsApp number. Known and accepted tradeoff for now.
 const DIRECT_PAYMENT_LINK = 'https://buy.stripe.com/9B6eVd8QwaRE9HK4bb8N201'
 
 const features = [
@@ -16,46 +15,6 @@ const features = [
 ]
 
 export default function Pricing() {
-  const [showPhoneInput, setShowPhoneInput] = useState(false)
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-
-  const startCheckout = async () => {
-    if (!showPhoneInput) {
-      setShowPhoneInput(true)
-      return
-    }
-
-    if (!name.trim()) {
-      setError('Enter your name.')
-      return
-    }
-
-    if (phone.trim().length < 6) {
-      setError("Enter the WhatsApp number you'll message the bot from.")
-      return
-    }
-
-    setError('')
-    setLoading(true)
-
-    try {
-      const res = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), phone: phone.trim() }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Something went wrong')
-      window.location.href = data.url
-    } catch (err) {
-      setError(err.message)
-      setLoading(false)
-    }
-  }
-
   return (
     <section className="pricing" id="pricing">
       <div className="container">
@@ -99,47 +58,8 @@ export default function Pricing() {
               ))}
             </ul>
 
-            {showPhoneInput && (
-              <div className="pricing-card__phone">
-                <label htmlFor="wa-name" className="pricing-card__phone-label">
-                  Your name
-                </label>
-                <input
-                  id="wa-name"
-                  type="text"
-                  autoFocus
-                  placeholder="Amina"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="pricing-card__phone-input"
-                />
-
-                <label htmlFor="wa-phone" className="pricing-card__phone-label">
-                  Your WhatsApp number
-                </label>
-                <input
-                  id="wa-phone"
-                  type="tel"
-                  placeholder="+31 6 12345678"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="pricing-card__phone-input"
-                />
-              </div>
-            )}
-            {error && <p className="pricing-card__error">{error}</p>}
-
-            <button className="btn btn-lg pricing-card__cta btn-primary" onClick={startCheckout} disabled={loading}>
-              {loading ? 'Redirecting…' : showPhoneInput ? 'Continue to checkout' : 'Start my free week'}
-            </button>
-
-            <a
-              href={DIRECT_PAYMENT_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pricing-card__direct-link"
-            >
-              Prefer to pay directly on Stripe? Use this link instead
+            <a href={DIRECT_PAYMENT_LINK} className="btn btn-lg pricing-card__cta btn-primary">
+              Start my free week
             </a>
           </div>
         </div>

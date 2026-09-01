@@ -213,52 +213,6 @@
   margin-bottom: 28px;
 }
 
-.pricing-card__phone {
-  margin-bottom: 16px;
-  animation: fadeInUp 0.3s ease;
-}
-
-.pricing-card__phone-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-}
-
-.pricing-card__phone-input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: var(--radius);
-  border: 2px solid var(--border);
-  font-size: 15px;
-  font-family: inherit;
-  transition: var(--transition);
-  margin-bottom: 14px;
-}
-
-.pricing-card__phone-input:last-child {
-  margin-bottom: 0;
-}
-
-.pricing-card__phone-input:focus {
-  outline: none;
-  border-color: var(--primary);
-}
-
-.pricing-card__error {
-  font-size: 13.5px;
-  color: var(--error);
-  margin-bottom: 12px;
-}
-
-.pricing-card__custom {
-  font-size: 36px;
-  font-weight: 900;
-  color: var(--text-primary);
-  line-height: 1.2;
-}
-
 .pricing-card__features {
   margin-bottom: 32px;
   display: flex;
@@ -292,21 +246,6 @@
 
 .pricing-card__cta {
   width: 100%;
-}
-
-.pricing-card__direct-link {
-  display: block;
-  text-align: center;
-  font-size: 13px;
-  color: var(--text-muted);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  margin-top: 14px;
-  transition: var(--transition);
-}
-
-.pricing-card__direct-link:hover {
-  color: var(--text-secondary);
 }
 
 .pricing__guarantee {
