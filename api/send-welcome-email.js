@@ -9,6 +9,8 @@ import { envVar } from './_lib/env.js'
 const stripe = new Stripe(envVar('STRIPE_SECRET_KEY'), { apiVersion: '2026-07-29.dahlia' })
 const resend = new Resend(envVar('RESEND_API_KEY'))
 
+const CUSTOMER_PORTAL_LINK = 'https://billing.stripe.com/p/login/bJe9ATeaQgbY5rufTT8N200'
+
 export const config = {
   api: {
     bodyParser: false,
@@ -49,9 +51,12 @@ function buildEmailHtml(name, waNumber, waLink) {
             Just send <strong style="color:#111827;">"start"</strong> and you're straight into your first lesson — no app to download, nothing else to set up.
           </p>
           <hr style="border:none;border-top:1px solid #E5E7EB;margin:0 0 20px;" />
-          <p style="font-size:13px;color:#9CA3AF;margin:0;line-height:1.6;text-align:center;">
+          <p style="font-size:13px;color:#9CA3AF;margin:0 0 10px;line-height:1.6;text-align:center;">
             Questions? Just reply to this email — we read every one.<br />
             — The LisanAI team
+          </p>
+          <p style="font-size:12px;color:#9CA3AF;margin:0;line-height:1.6;text-align:center;">
+            <a href="${CUSTOMER_PORTAL_LINK}" style="color:#9CA3AF;">Manage or cancel your subscription</a>
           </p>
         </div>
       </div>
@@ -89,7 +94,7 @@ export default async function handler(req, res) {
           from: 'LisanAI <welcome@mail.lisanai.net>',
           to: email,
           subject: 'Welcome to LisanAI! Your free trial has started 🎉',
-          text: `Welcome${name && name !== 'there' ? `, ${name}` : ''}! 🎉\n\nYour 7-day free trial just started — no charge until it ends, cancel anytime.\n\nMessage your Arabic tutor on WhatsApp to get going:\n\n+${waNumber}\n\nOr just tap this link: ${waLink}\n\nSend "start" and you're straight into your first lesson — no app to download, nothing else to set up.\n\nQuestions? Just reply to this email — we read every one.\n\n— The LisanAI team`,
+          text: `Welcome${name && name !== 'there' ? `, ${name}` : ''}! 🎉\n\nYour 7-day free trial just started — no charge until it ends, cancel anytime.\n\nMessage your Arabic tutor on WhatsApp to get going:\n\n+${waNumber}\n\nOr just tap this link: ${waLink}\n\nSend "start" and you're straight into your first lesson — no app to download, nothing else to set up.\n\nQuestions? Just reply to this email — we read every one.\n\n— The LisanAI team\n\nManage or cancel your subscription: ${CUSTOMER_PORTAL_LINK}`,
           html: buildEmailHtml(name, waNumber, waLink),
         })
       } catch (err) {

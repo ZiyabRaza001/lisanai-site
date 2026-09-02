@@ -1,9 +1,11 @@
 import './Footer.css'
 
+const CUSTOMER_PORTAL_LINK = 'https://billing.stripe.com/p/login/bJe9ATeaQgbY5rufTT8N200'
+
 const footerLinks = {
   Product: ['Features', 'Demo', 'Pricing', 'Curriculum', 'Changelog'],
   Company: ['About us', 'Blog', 'Contact', 'WhatsApp us', 'Press'],
-  Support: ['Help center', 'Documentation', 'Status', 'Book a demo', 'Onboarding'],
+  Support: ['Help center', 'Documentation', 'Status', 'Manage subscription', 'Onboarding'],
   Legal: ['Privacy policy', 'Terms of service', 'Data & cookies', 'Security'],
 }
 
@@ -40,24 +42,38 @@ export default function Footer() {
               <div key={category} className="footer__col">
                 <h4 className="footer__col-title">{category}</h4>
                 <ul className="footer__col-list">
-                  {links.map(link => (
-                    <li key={link}>
-                      {link === 'Contact' ? (
-                        <a
-                          href="#contact"
-                          className="footer__link"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
-                          }}
-                        >
-                          {link}
-                        </a>
-                      ) : (
+                  {links.map(link => {
+                    if (link === 'Contact') {
+                      return (
+                        <li key={link}>
+                          <a
+                            href="#contact"
+                            className="footer__link"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
+                            }}
+                          >
+                            {link}
+                          </a>
+                        </li>
+                      )
+                    }
+                    if (link === 'Manage subscription') {
+                      return (
+                        <li key={link}>
+                          <a href={CUSTOMER_PORTAL_LINK} target="_blank" rel="noopener noreferrer" className="footer__link">
+                            {link}
+                          </a>
+                        </li>
+                      )
+                    }
+                    return (
+                      <li key={link}>
                         <a href="#" className="footer__link">{link}</a>
-                      )}
-                    </li>
-                  ))}
+                      </li>
+                    )
+                  })}
                 </ul>
               </div>
             ))}

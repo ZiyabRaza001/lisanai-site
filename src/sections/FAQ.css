@@ -93,8 +93,20 @@
 }
 
 .faq-item--open .faq-item__answer {
-  max-height: 300px;
+  max-height: 340px;
   padding: 0 24px 22px;
+}
+
+.faq-item__link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.faq-item__link:hover {
+  text-decoration: underline;
 }
 
 .faq-item__answer p {

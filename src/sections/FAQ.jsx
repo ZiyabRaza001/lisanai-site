@@ -43,6 +43,11 @@ const faqs = [
     q: 'Is my data safe?',
     a: 'Your messages and learning data are stored encrypted and never shared with third parties. WhatsApp conversations are end-to-end encrypted the same way any WhatsApp chat is.',
   },
+  {
+    q: 'How do I cancel my subscription?',
+    a: 'Anytime, yourself, no need to contact us. Use the link below, enter the email you paid with, and Stripe emails you a one-time code to manage or cancel your subscription.',
+    link: { href: 'https://billing.stripe.com/p/login/bJe9ATeaQgbY5rufTT8N200', label: 'Manage or cancel your subscription →' },
+  },
 ]
 
 function FAQItem({ faq, isOpen, onClick }) {
@@ -58,6 +63,11 @@ function FAQItem({ faq, isOpen, onClick }) {
       </div>
       <div className="faq-item__answer">
         <p>{faq.a}</p>
+        {faq.link && (
+          <a href={faq.link.href} target="_blank" rel="noopener noreferrer" className="faq-item__link">
+            {faq.link.label}
+          </a>
+        )}
       </div>
     </div>
   )
