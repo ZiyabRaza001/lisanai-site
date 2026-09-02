@@ -86,7 +86,7 @@ export default async function handler(req, res) {
     if (email && waNumber) {
       try {
         await resend.emails.send({
-          from: 'LisanAI <onboarding@resend.dev>',
+          from: 'LisanAI <welcome@mail.lisanai.net>',
           to: email,
           subject: 'Welcome to LisanAI! Your free trial has started 🎉',
           text: `Welcome${name && name !== 'there' ? `, ${name}` : ''}! 🎉\n\nYour 7-day free trial just started — no charge until it ends, cancel anytime.\n\nMessage your Arabic tutor on WhatsApp to get going:\n\n+${waNumber}\n\nOr just tap this link: ${waLink}\n\nSend "start" and you're straight into your first lesson — no app to download, nothing else to set up.\n\nQuestions? Just reply to this email — we read every one.\n\n— The LisanAI team`,
