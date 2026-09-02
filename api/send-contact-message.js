@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
   try {
     const { error } = await resend.emails.send({
-      from: 'LisanAI Contact Form <onboarding@resend.dev>',
+      from: 'LisanAI Contact Form <contact@mail.lisanai.net>',
       to: CONTACT_EMAIL,
       replyTo: email,
       subject: `[LisanAI contact] ${subject}`,
