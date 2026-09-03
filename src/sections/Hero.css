@@ -146,50 +146,6 @@
   gap: 10px;
 }
 
-.hero__social-proof {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding-top: 4px;
-}
-
-.hero__avatars {
-  display: flex;
-}
-
-.hero__avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2.5px solid white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: white;
-  margin-left: -10px;
-  box-shadow: var(--shadow-sm);
-}
-
-.hero__avatar:first-child { margin-left: 0; }
-
-.hero__stars {
-  color: #F59E0B;
-  font-size: 13px;
-  letter-spacing: 2px;
-}
-
-.hero__social-text {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
-
-.hero__social-text strong {
-  color: var(--text-primary);
-}
-
 /* Phone mockup */
 .hero__visual {
   position: relative;
@@ -409,8 +365,7 @@
   }
 
   .hero__capabilities,
-  .hero__actions,
-  .hero__social-proof {
+  .hero__actions {
     justify-content: center;
   }
 

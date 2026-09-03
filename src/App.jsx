@@ -7,7 +7,6 @@ import Features from './sections/Features'
 import Demo from './sections/Demo'
 import HowItWorks from './sections/HowItWorks'
 import Pricing from './sections/Pricing'
-import Testimonials from './sections/Testimonials'
 import FAQ from './sections/FAQ'
 import CTA from './sections/CTA'
 import Contact from './sections/Contact'
@@ -25,7 +24,6 @@ function App() {
         <Demo />
         <HowItWorks />
         <Pricing />
-        <Testimonials />
         <FAQ />
         <CTA />
         <Contact />

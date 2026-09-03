@@ -69,20 +69,6 @@ export default function Hero() {
               </svg>
             </button>
           </div>
-
-          <div className="hero__social-proof">
-            <div className="hero__avatars">
-              {['ML', 'DK', 'SR', 'PL'].map((init, i) => (
-                <div key={i} className="hero__avatar" style={{ background: ['#25D366','#075E54','#128C7E','#34B7F1'][i] }}>
-                  {init}
-                </div>
-              ))}
-            </div>
-            <div>
-              <div className="hero__stars">★★★★★</div>
-              <p className="hero__social-text"><strong>500+</strong> learners practicing Arabic <strong>every week</strong></p>
-            </div>
-          </div>
         </div>
 
         <div className="hero__visual">

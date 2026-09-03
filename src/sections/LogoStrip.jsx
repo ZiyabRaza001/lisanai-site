@@ -3,8 +3,6 @@ import './LogoStrip.css'
 const stats = [
   { value: '50+', label: 'guided lessons', icon: '📖' },
   { value: '24/7', label: 'available anytime', icon: '🤖' },
-  { value: '2', label: 'languages supported', icon: '🌍' },
-  { value: '500+', label: 'active learners', icon: '👥' },
   { value: '0', label: 'apps to download', icon: '💡' },
   { value: '100%', label: 'inside WhatsApp', icon: '💬' },
 ]

@@ -23,7 +23,6 @@ export default function CTA() {
             <span className="cta__title-accent">learn Arabic that sticks?</span>
           </h2>
           <p className="cta__subtitle">
-            Join 500+ learners studying Arabic right from WhatsApp.
             7 days free to try — no credit card needed.
           </p>
 
