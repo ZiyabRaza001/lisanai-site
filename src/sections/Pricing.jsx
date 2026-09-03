@@ -19,6 +19,13 @@ const features = [
   'Cancel anytime, no commitment',
 ]
 
+const vipFeatures = [
+  'Everything in Standard',
+  'Priority WhatsApp support',
+  '1:1 onboarding call',
+  'Early access to new features',
+]
+
 export default function Pricing() {
   const [showPhoneInput, setShowPhoneInput] = useState(false)
   const [name, setName] = useState('')
@@ -63,7 +70,7 @@ export default function Pricing() {
           </p>
         </div>
 
-        <div className="pricing__grid pricing__grid--single">
+        <div className="pricing__grid pricing__grid--two">
           <div className="pricing-card pricing-card--highlight">
             <div className="pricing-card__badge">7 days free</div>
             <div className="pricing-card__header">
@@ -124,6 +131,35 @@ export default function Pricing() {
 
             <button className="btn btn-lg pricing-card__cta btn-primary" onClick={startCheckout}>
               {showPhoneInput ? 'Continue to checkout' : 'Start my free week'}
+            </button>
+          </div>
+
+          <div className="pricing-card pricing-card--soldout">
+            <div className="pricing-card__badge pricing-card__badge--soldout">Sold out</div>
+            <div className="pricing-card__header">
+              <span className="pricing-card__icon">⭐</span>
+              <h3 className="pricing-card__name">LisanAI VIP</h3>
+              <p className="pricing-card__desc">Limited-seat priority tier with 1:1 onboarding — fully booked.</p>
+            </div>
+
+            <div className="pricing-card__price">
+              <span className="pricing-card__currency">€</span>
+              <span className="pricing-card__amount">5.99</span>
+              <span className="pricing-card__period">/week</span>
+            </div>
+            <p className="pricing-card__price-note">All VIP seats are currently taken. Join the standard plan — no waitlist needed.</p>
+
+            <ul className="pricing-card__features">
+              {vipFeatures.map((f, j) => (
+                <li key={j} className="pricing-card__feature">
+                  <span className="pricing-card__check">✓</span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+
+            <button className="btn btn-lg pricing-card__cta btn-secondary" disabled>
+              Sold out
             </button>
           </div>
         </div>
