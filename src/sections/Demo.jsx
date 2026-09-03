@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import './Demo.css'
 
 const scenarios = [
@@ -59,8 +59,16 @@ export default function Demo() {
   const [activeScenario, setActiveScenario] = useState(0)
   const [visibleMessages, setVisibleMessages] = useState(2)
   const [playing, setPlaying] = useState(false)
+  const chatAreaRef = useRef(null)
 
   const scenario = scenarios[activeScenario]
+
+  // Keep the newest message in view as the demo plays or advances, instead
+  // of leaving the chat scrolled to wherever it happened to be.
+  useEffect(() => {
+    const el = chatAreaRef.current
+    if (el) el.scrollTop = el.scrollHeight
+  }, [visibleMessages, activeScenario, playing])
 
   const handleScenario = (idx) => {
     setActiveScenario(idx)
@@ -134,7 +142,7 @@ export default function Demo() {
                   </div>
                 </div>
 
-                <div className="demo__chat-area">
+                <div className="demo__chat-area" ref={chatAreaRef}>
                   {msgs.map((msg, i) => (
                     <div
                       key={`${activeScenario}-${i}`}

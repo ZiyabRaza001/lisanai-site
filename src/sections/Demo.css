@@ -129,6 +129,7 @@
   flex-direction: column;
   gap: 6px;
   scrollbar-width: none;
+  scroll-behavior: smooth;
 }
 
 .demo__chat-area::-webkit-scrollbar { display: none; }
