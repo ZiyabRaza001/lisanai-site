@@ -144,7 +144,7 @@ export default function Pricing() {
 
             <div className="pricing-card__price">
               <span className="pricing-card__currency">€</span>
-              <span className="pricing-card__amount">5.99</span>
+              <span className="pricing-card__amount">3.49</span>
               <span className="pricing-card__period">/week</span>
             </div>
             <p className="pricing-card__price-note">All VIP seats are currently taken. Join the standard plan — no waitlist needed.</p>
