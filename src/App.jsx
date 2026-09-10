@@ -1,4 +1,5 @@
 import './App.css'
+import { Analytics } from '@vercel/analytics/react'
 import Navbar from './components/Navbar'
 import CheckoutStatusModal from './components/CheckoutStatusModal'
 import Hero from './sections/Hero'
@@ -29,6 +30,7 @@ function App() {
         <Contact />
       </main>
       <Footer />
+      <Analytics />
     </>
   )
 }
