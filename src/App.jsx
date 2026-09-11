@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './App.css'
 import { Analytics } from '@vercel/analytics/react'
 import Navbar from './components/Navbar'
@@ -14,9 +15,15 @@ import Contact from './sections/Contact'
 import Footer from './components/Footer'
 
 function App() {
+  const [trialModal, setTrialModal] = useState({ open: false, name: '' })
+
   return (
     <>
-      <CheckoutStatusModal />
+      <CheckoutStatusModal
+        open={trialModal.open}
+        name={trialModal.name}
+        onClose={() => setTrialModal({ open: false, name: '' })}
+      />
       <Navbar />
       <main>
         <Hero />
@@ -24,7 +31,7 @@ function App() {
         <Features />
         <Demo />
         <HowItWorks />
-        <Pricing />
+        <Pricing onTrialStarted={(name) => setTrialModal({ open: true, name })} />
         <FAQ />
         <CTA />
         <Contact />

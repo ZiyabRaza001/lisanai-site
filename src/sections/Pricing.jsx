@@ -2,13 +2,7 @@ import { useState } from 'react'
 import './Pricing.css'
 import { normalizePhone } from '../lib/phone'
 
-// Direct Stripe Payment Link. It carries no arbitrary metadata of its own —
-// the only dynamic value Stripe lets a Payment Link URL pass through is
-// client_reference_id, which n8n's sync workflow already reads as its
-// fallback for the phone number when metadata.telefoonnummer is absent.
-// The name has no equivalent pass-through, so it's carried in sessionStorage
-// instead, purely for personalizing the pop-up after redirect.
-const DIRECT_PAYMENT_LINK = 'https://buy.stripe.com/9B6eVd8QwaRE9HK4bb8N201'
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const features = [
   'Unlimited guided lessons',
@@ -26,13 +20,15 @@ const vipFeatures = [
   'Early access to new features',
 ]
 
-export default function Pricing() {
+export default function Pricing({ onTrialStarted }) {
   const [showPhoneInput, setShowPhoneInput] = useState(false)
   const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const startCheckout = () => {
+  const startTrial = async () => {
     if (!showPhoneInput) {
       setShowPhoneInput(true)
       return
@@ -43,6 +39,11 @@ export default function Pricing() {
       return
     }
 
+    if (!email.trim() || !EMAIL_PATTERN.test(email.trim())) {
+      setError('Enter a valid email address.')
+      return
+    }
+
     const e164Phone = normalizePhone(phone)
     if (!e164Phone) {
       setError('Enter your WhatsApp number with country code, e.g. +31612345678')
@@ -50,10 +51,27 @@ export default function Pricing() {
     }
 
     setError('')
+    setLoading(true)
 
-    const telefoonnummer = e164Phone.replace(/\D/g, '')
-    sessionStorage.setItem('lisanai_checkout_name', name.trim())
-    window.location.href = `${DIRECT_PAYMENT_LINK}?client_reference_id=${telefoonnummer}`
+    try {
+      const res = await fetch('/api/start-trial', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), phone: e164Phone }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Could not start your trial — try again in a moment.')
+
+      onTrialStarted?.(name.trim())
+      setShowPhoneInput(false)
+      setName('')
+      setEmail('')
+      setPhone('')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -66,7 +84,7 @@ export default function Pricing() {
             <span className="pricing__title-accent">no surprises</span>
           </h2>
           <p className="section-subtitle">
-            Try LisanAI free for 7 days. Then lock in €2.49/week (normally €6) — cancel anytime.
+            Try LisanAI free for 7 days — no card needed. Keep going after for €2.49/week (normally €6).
           </p>
         </div>
 
@@ -88,7 +106,7 @@ export default function Pricing() {
               <span className="pricing-card__original">€6.00/week</span>
               <span className="pricing-card__discount-flag">Save 58%</span>
             </div>
-            <p className="pricing-card__price-note">Free for your first 7 days, then €2.49/week. Cancel before day 8 and pay nothing.</p>
+            <p className="pricing-card__price-note">Free for your first 7 days, no card required. We'll message you on WhatsApp with a link to continue for €2.49/week if you'd like to keep learning.</p>
 
             <ul className="pricing-card__features">
               {features.map((f, j) => (
@@ -114,6 +132,18 @@ export default function Pricing() {
                   className="pricing-card__phone-input"
                 />
 
+                <label htmlFor="wa-email" className="pricing-card__phone-label">
+                  Your email
+                </label>
+                <input
+                  id="wa-email"
+                  type="email"
+                  placeholder="amina@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pricing-card__phone-input"
+                />
+
                 <label htmlFor="wa-phone" className="pricing-card__phone-label">
                   Your WhatsApp number
                 </label>
@@ -129,8 +159,8 @@ export default function Pricing() {
             )}
             {error && <p className="pricing-card__error">{error}</p>}
 
-            <button className="btn btn-lg pricing-card__cta btn-primary" onClick={startCheckout}>
-              {showPhoneInput ? 'Continue to checkout' : 'Start my free week'}
+            <button className="btn btn-lg pricing-card__cta btn-primary" onClick={startTrial} disabled={loading}>
+              {loading ? 'Starting your trial…' : showPhoneInput ? 'Start my free trial' : 'Start my free week'}
             </button>
           </div>
 
@@ -167,7 +197,7 @@ export default function Pricing() {
         <div className="pricing__guarantee">
           <span className="pricing__guarantee-icon">🛡️</span>
           <p>
-            <strong>No charge until day 8.</strong> Cancel anytime during your free week and you won't be billed a cent.
+            <strong>No card, no charge.</strong> Try free for 7 days — we'll only ask for payment on WhatsApp if you decide to continue.
           </p>
         </div>
       </div>
