@@ -41,42 +41,47 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Enter your WhatsApp number with country code, e.g. +31612345678' })
   }
 
-  const webhookUrl = envVar('N8N_TRIAL_SIGNUP_WEBHOOK_URL')
-  if (!webhookUrl) {
-    console.error('N8N_TRIAL_SIGNUP_WEBHOOK_URL is not set')
-    return res.status(500).json({ error: 'Signup is temporarily unavailable — try again shortly.' })
-  }
-
   // Record the trial in n8n/Supabase first. If this fails, stop here rather
   // than sending a welcome email for a trial that was never actually
   // recorded — the 7-day clock and paywall gate both depend on this write.
-  try {
-    const webhookSecret = envVar('N8N_TRIAL_SIGNUP_SECRET')
-    const webhookRes = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(webhookSecret ? { 'x-webhook-secret': webhookSecret } : {}),
-      },
-      body: JSON.stringify({ name, email, phone }),
-    })
+  //
+  // TEMPORARY: the n8n webhook isn't built yet, so when the URL isn't
+  // configured this just logs a warning and carries on — signups work
+  // (email + popup) but nothing is recorded anywhere yet. Once
+  // N8N_TRIAL_SIGNUP_WEBHOOK_URL is set, this starts enforcing the write for
+  // real (failure blocks the signup) — remove this TEMPORARY branch then.
+  const webhookUrl = envVar('N8N_TRIAL_SIGNUP_WEBHOOK_URL')
+  if (!webhookUrl) {
+    console.warn('N8N_TRIAL_SIGNUP_WEBHOOK_URL is not set — trial signup was NOT recorded anywhere:', { name, email, phone })
+  } else {
+    try {
+      const webhookSecret = envVar('N8N_TRIAL_SIGNUP_SECRET')
+      const webhookRes = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(webhookSecret ? { 'x-webhook-secret': webhookSecret } : {}),
+        },
+        body: JSON.stringify({ name, email, phone }),
+      })
 
-    if (!webhookRes.ok) {
-      // n8n can reject a signup on purpose (e.g. phone already has an active
-      // trial/subscription) — try to surface that message instead of a
-      // generic error.
-      let message = 'Could not start your trial — try again in a moment.'
-      try {
-        const body = await webhookRes.json()
-        if (body?.error) message = body.error
-      } catch {
-        // non-JSON error body — fall back to the generic message above
+      if (!webhookRes.ok) {
+        // n8n can reject a signup on purpose (e.g. phone already has an
+        // active trial/subscription) — try to surface that message instead
+        // of a generic error.
+        let message = 'Could not start your trial — try again in a moment.'
+        try {
+          const body = await webhookRes.json()
+          if (body?.error) message = body.error
+        } catch {
+          // non-JSON error body — fall back to the generic message above
+        }
+        return res.status(webhookRes.status === 409 ? 409 : 502).json({ error: message })
       }
-      return res.status(webhookRes.status === 409 ? 409 : 502).json({ error: message })
+    } catch (err) {
+      console.error('Failed to reach trial-signup webhook:', err)
+      return res.status(502).json({ error: 'Could not start your trial — try again in a moment.' })
     }
-  } catch (err) {
-    console.error('Failed to reach trial-signup webhook:', err)
-    return res.status(502).json({ error: 'Could not start your trial — try again in a moment.' })
   }
 
   const waNumber = envVar('VITE_WHATSAPP_NUMBER')
