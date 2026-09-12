@@ -79,7 +79,7 @@ export default async function handler(req, res) {
     email,
     abonnement_status: 'active',
     abonnement_verloopt_op: trialEndsAt,
-    modus: 'wacht_keuze',
+    modus: 'geen_modus',
   })
 
   if (insertError) {
