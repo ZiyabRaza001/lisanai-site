@@ -45,10 +45,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Enter your WhatsApp number with country code, e.g. +31612345678' })
   }
 
-  // Same digits-only format the old Stripe flow wrote to this column
-  // (stripped of the leading "+"), so it lines up with existing rows and
-  // however the bot matches an incoming WhatsApp sender's number.
-  const telefoonnummer = phone.replace(/\D/g, '')
+  // Must match the exact format the bot itself writes/reads for this column
+  // — Twilio's WhatsApp sender id, e.g. "whatsapp:+31686398954" — so a row
+  // created here is the same row the bot finds on someone's first message.
+  const telefoonnummer = `whatsapp:${phone}`
 
   // Record the trial first. If this fails, stop here rather than sending a
   // welcome email for a trial that was never actually recorded — the 7-day
@@ -77,8 +77,9 @@ export default async function handler(req, res) {
     telefoonnummer,
     naam: name,
     email,
-    abonnement_status: 'trialing',
+    abonnement_status: 'active',
     abonnement_verloopt_op: trialEndsAt,
+    modus: 'wacht_keuze',
   })
 
   if (insertError) {
