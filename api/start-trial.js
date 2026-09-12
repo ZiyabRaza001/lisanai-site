@@ -1,15 +1,19 @@
 import { Resend } from 'resend'
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import { envVar } from './_lib/env.js'
+import { supabase } from './_lib/supabase.js'
 import { buildWelcomeEmailHtml, buildWelcomeEmailText } from './_lib/welcomeEmail.js'
 
 // Card-free trial signup. Replaces the old flow where this page redirected
-// straight to a Stripe Payment Link — no Stripe involved here at all. n8n
-// owns the actual trial-clock bookkeeping in Supabase (same split as the
-// Stripe webhook in send-welcome-email.js, which only ever sends email and
-// never writes to Supabase itself); this endpoint's job is just: validate,
-// hand the signup to n8n, and send the welcome email once n8n confirms it.
+// straight to a Stripe Payment Link — no Stripe involved here at all.
+// Writes the trial row directly to the same `gebruikers` table the bot reads
+// (see the "Heeft Actief Abonnement?" n8n node) — abonnement_status/
+// abonnement_verloopt_op are set to exactly what that node's condition
+// checks for, so a fresh signup passes the same gate a real Stripe
+// subscription would.
 const resend = new Resend(envVar('RESEND_API_KEY'))
+
+const TRIAL_LENGTH_DAYS = 7
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -41,47 +45,45 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Enter your WhatsApp number with country code, e.g. +31612345678' })
   }
 
-  // Record the trial in n8n/Supabase first. If this fails, stop here rather
-  // than sending a welcome email for a trial that was never actually
-  // recorded — the 7-day clock and paywall gate both depend on this write.
-  //
-  // TEMPORARY: the n8n webhook isn't built yet, so when the URL isn't
-  // configured this just logs a warning and carries on — signups work
-  // (email + popup) but nothing is recorded anywhere yet. Once
-  // N8N_TRIAL_SIGNUP_WEBHOOK_URL is set, this starts enforcing the write for
-  // real (failure blocks the signup) — remove this TEMPORARY branch then.
-  const webhookUrl = envVar('N8N_TRIAL_SIGNUP_WEBHOOK_URL')
-  if (!webhookUrl) {
-    console.warn('N8N_TRIAL_SIGNUP_WEBHOOK_URL is not set — trial signup was NOT recorded anywhere:', { name, email, phone })
-  } else {
-    try {
-      const webhookSecret = envVar('N8N_TRIAL_SIGNUP_SECRET')
-      const webhookRes = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(webhookSecret ? { 'x-webhook-secret': webhookSecret } : {}),
-        },
-        body: JSON.stringify({ name, email, phone }),
-      })
+  // Same digits-only format the old Stripe flow wrote to this column
+  // (stripped of the leading "+"), so it lines up with existing rows and
+  // however the bot matches an incoming WhatsApp sender's number.
+  const telefoonnummer = phone.replace(/\D/g, '')
 
-      if (!webhookRes.ok) {
-        // n8n can reject a signup on purpose (e.g. phone already has an
-        // active trial/subscription) — try to surface that message instead
-        // of a generic error.
-        let message = 'Could not start your trial — try again in a moment.'
-        try {
-          const body = await webhookRes.json()
-          if (body?.error) message = body.error
-        } catch {
-          // non-JSON error body — fall back to the generic message above
-        }
-        return res.status(webhookRes.status === 409 ? 409 : 502).json({ error: message })
-      }
-    } catch (err) {
-      console.error('Failed to reach trial-signup webhook:', err)
-      return res.status(502).json({ error: 'Could not start your trial — try again in a moment.' })
-    }
+  // Record the trial first. If this fails, stop here rather than sending a
+  // welcome email for a trial that was never actually recorded — the 7-day
+  // clock and the bot's paywall gate both depend on this row existing.
+  const { data: existing, error: lookupError } = await supabase
+    .from('gebruikers')
+    .select('id')
+    .eq('telefoonnummer', telefoonnummer)
+    .maybeSingle()
+
+  if (lookupError) {
+    console.error('Failed to look up existing gebruikers row:', lookupError)
+    return res.status(502).json({ error: 'Could not start your trial — try again in a moment.' })
+  }
+
+  if (existing) {
+    // Don't touch an existing row from here — it may belong to a real
+    // paying customer with live Stripe IDs on it. A signup form is not the
+    // place to silently overwrite that.
+    return res.status(409).json({ error: 'Looks like you already have an account — just message LisanAI on WhatsApp to continue.' })
+  }
+
+  const trialEndsAt = new Date(Date.now() + TRIAL_LENGTH_DAYS * 24 * 60 * 60 * 1000).toISOString()
+
+  const { error: insertError } = await supabase.from('gebruikers').insert({
+    telefoonnummer,
+    naam: name,
+    email,
+    abonnement_status: 'trialing',
+    abonnement_verloopt_op: trialEndsAt,
+  })
+
+  if (insertError) {
+    console.error('Failed to insert trial signup:', insertError)
+    return res.status(502).json({ error: 'Could not start your trial — try again in a moment.' })
   }
 
   const waNumber = envVar('VITE_WHATSAPP_NUMBER')
@@ -96,8 +98,8 @@ export default async function handler(req, res) {
         html: buildWelcomeEmailHtml(name, waNumber, waLink),
       })
     } catch (err) {
-      // The trial is already recorded in n8n/Supabase at this point, so
-      // don't fail the request over an email hiccup — log it and let the
+      // The trial is already recorded in Supabase at this point, so don't
+      // fail the request over an email hiccup — log it and let the
       // success response (and on-page popup) still carry the WhatsApp
       // number through.
       console.error('Failed to send trial welcome email:', err)
