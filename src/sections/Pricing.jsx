@@ -1,8 +1,20 @@
 import { useState } from 'react'
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 import './Pricing.css'
 import { normalizePhone } from '../lib/phone'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+// Best-effort guess so most visitors never have to touch the country
+// dropdown at all — falls back to NL (the business's home market) when the
+// browser doesn't expose a region, e.g. plain "en" with no "-XX" suffix.
+function guessDefaultCountry() {
+  if (typeof navigator === 'undefined') return 'NL'
+  const locale = navigator.language || navigator.languages?.[0] || ''
+  const region = locale.split('-')[1]
+  return region ? region.toUpperCase() : 'NL'
+}
 
 const features = [
   'Unlimited guided lessons',
@@ -25,6 +37,7 @@ export default function Pricing({ onTrialStarted }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [defaultCountry] = useState(guessDefaultCountry)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -46,7 +59,7 @@ export default function Pricing({ onTrialStarted }) {
 
     const e164Phone = normalizePhone(phone)
     if (!e164Phone) {
-      setError('Enter your WhatsApp number with country code, e.g. +31612345678')
+      setError('Enter a valid WhatsApp number.')
       return
     }
 
@@ -147,13 +160,14 @@ export default function Pricing({ onTrialStarted }) {
                 <label htmlFor="wa-phone" className="pricing-card__phone-label">
                   Your WhatsApp number
                 </label>
-                <input
+                <PhoneInput
                   id="wa-phone"
-                  type="tel"
-                  placeholder="+31 6 12345678"
+                  className="pricing-card__phone-field"
+                  international
+                  defaultCountry={defaultCountry}
+                  placeholder="Enter your WhatsApp number"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="pricing-card__phone-input"
+                  onChange={(value) => setPhone(value || '')}
                 />
               </div>
             )}

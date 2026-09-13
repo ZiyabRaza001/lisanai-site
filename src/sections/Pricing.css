@@ -290,6 +290,40 @@
   border-color: var(--primary);
 }
 
+/* .PhoneInput is react-phone-number-input's own wrapper class (flag select
+   + number input) — styled as one bordered field to match the plain inputs
+   above it, instead of double-bordering the flag select and the input
+   separately. */
+.pricing-card__phone-field {
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  transition: var(--transition);
+  margin-bottom: 14px;
+}
+
+.pricing-card__phone-field:last-child {
+  margin-bottom: 0;
+}
+
+.pricing-card__phone-field.PhoneInput--focus {
+  border-color: var(--primary);
+}
+
+.pricing-card__phone-field .PhoneInputInput {
+  border: none;
+  outline: none;
+  padding: 0;
+  font-size: 15px;
+  font-family: inherit;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.pricing-card__phone-field .PhoneInputCountrySelect {
+  cursor: pointer;
+}
+
 .pricing-card__error {
   font-size: 13.5px;
   color: var(--error);
