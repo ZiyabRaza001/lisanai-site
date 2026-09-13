@@ -84,7 +84,7 @@ export default function Pricing({ onTrialStarted }) {
             <span className="pricing__title-accent">no surprises</span>
           </h2>
           <p className="section-subtitle">
-            Try LisanAI free for 7 days — no card needed. Keep going after for €2.49/week (normally €6).
+            Try LisanAI free for 7 days — no card needed. Keep going after for €8.90/month (normally €21).
           </p>
         </div>
 
@@ -99,14 +99,14 @@ export default function Pricing({ onTrialStarted }) {
 
             <div className="pricing-card__price">
               <span className="pricing-card__currency">€</span>
-              <span className="pricing-card__amount">2.49</span>
-              <span className="pricing-card__period">/week</span>
+              <span className="pricing-card__amount">8.90</span>
+              <span className="pricing-card__period">/month</span>
             </div>
             <div className="pricing-card__discount-row">
-              <span className="pricing-card__original">€6.00/week</span>
+              <span className="pricing-card__original">€21.00/month</span>
               <span className="pricing-card__discount-flag">Save 58%</span>
             </div>
-            <p className="pricing-card__price-note">Free for your first 7 days, no card required. We'll message you on WhatsApp with a link to continue for €2.49/week if you'd like to keep learning.</p>
+            <p className="pricing-card__price-note">Free for your first 7 days, no card required. We'll message you on WhatsApp with a link to continue for €8.90/month if you'd like to keep learning.</p>
 
             <ul className="pricing-card__features">
               {features.map((f, j) => (
@@ -174,8 +174,8 @@ export default function Pricing({ onTrialStarted }) {
 
             <div className="pricing-card__price">
               <span className="pricing-card__currency">€</span>
-              <span className="pricing-card__amount">3.49</span>
-              <span className="pricing-card__period">/week</span>
+              <span className="pricing-card__amount">12.49</span>
+              <span className="pricing-card__period">/month</span>
             </div>
             <p className="pricing-card__price-note">All VIP seats are currently taken. Join the standard plan — no waitlist needed.</p>
 
