@@ -111,11 +111,11 @@ export default function Pricing({ onTrialStarted }) {
             </div>
 
             <div className="pricing-card__price">
-              <span className="pricing-card__currency">€</span>
-              <span className="pricing-card__amount">8.90</span>
-              <span className="pricing-card__period">/month</span>
+              <span className="pricing-card__amount">Free</span>
+              <span className="pricing-card__period">for 7 days</span>
             </div>
             <div className="pricing-card__discount-row">
+              <span className="pricing-card__then-price">then €8.90/month</span>
               <span className="pricing-card__original">€21.00/month</span>
               <span className="pricing-card__discount-flag">Save 58%</span>
             </div>

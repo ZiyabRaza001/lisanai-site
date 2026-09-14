@@ -209,8 +209,15 @@
 .pricing-card__discount-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 16px;
+}
+
+.pricing-card__then-price {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .pricing-card__discount-flag {
