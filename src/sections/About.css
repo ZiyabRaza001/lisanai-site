@@ -1,0 +1,82 @@
+.about {
+  padding: 100px 0;
+  background: white;
+}
+
+.about__inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.about__header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.about__title-accent {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about__card {
+  display: flex;
+  gap: 28px;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+}
+
+.about__avatar {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-glow);
+}
+
+.about__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about__body p {
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.about__closing {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.about__signature {
+  color: var(--text-primary) !important;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .about { padding: 64px 0; }
+
+  .about__card {
+    flex-direction: column;
+    padding: 28px 24px;
+    gap: 16px;
+  }
+}

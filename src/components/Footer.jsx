@@ -59,6 +59,22 @@ export default function Footer() {
                         </li>
                       )
                     }
+                    if (link === 'About us') {
+                      return (
+                        <li key={link}>
+                          <a
+                            href="#about"
+                            className="footer__link"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })
+                            }}
+                          >
+                            {link}
+                          </a>
+                        </li>
+                      )
+                    }
                     if (link === 'Manage subscription') {
                       return (
                         <li key={link}>
