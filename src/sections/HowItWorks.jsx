@@ -3,26 +3,18 @@ import './HowItWorks.css'
 const steps = [
   {
     number: '01',
-    icon: '📱',
-    title: 'Message the bot',
-    desc: 'Send one message on WhatsApp and your personal Arabic tutor is ready. No app to install. No account to create.',
-    detail: 'Works on iPhone & Android',
+    icon: '📝',
+    title: 'Sign up',
+    desc: 'Enter your name, email, and WhatsApp number on this page — no card, nothing to install. Takes less than a minute.',
+    detail: 'No card needed',
     time: '1 min',
   },
   {
     number: '02',
-    icon: '🧭',
-    title: 'Pick your mode',
-    desc: 'A simple menu lets you choose "guided lessons" or "just chat and practice." Switch between them anytime you like.',
+    icon: '💬',
+    title: 'Start chatting',
+    desc: 'We message you on WhatsApp right away. Say hi, and you\'re straight into your first lesson — pick guided lessons or just chat and practice.',
     detail: 'Guided lessons or free chat',
-    time: '30 sec',
-  },
-  {
-    number: '03',
-    icon: '🚀',
-    title: 'Start learning',
-    desc: 'Jump straight into your lesson, or just ask a question. It already knows your level and picks up right where you left off.',
-    detail: 'Grammar, vocabulary, practice, free chat',
     time: 'Instant',
   },
 ]
@@ -39,8 +31,8 @@ export default function HowItWorks() {
             Ready in <span className="how__title-accent">under 2 minutes</span>
           </h2>
           <p className="section-subtitle">
-            No app to install, no account to configure, nothing to learn.
-            Just use WhatsApp the way you already do.
+            One quick sign-up, no card, no app to install.
+            Then it's just WhatsApp, the way you already use it.
           </p>
         </div>
 
@@ -87,7 +79,7 @@ export default function HowItWorks() {
             </div>
           </div>
           <p className="how__example-note">
-            That's it. Everything happens through messages — no buttons, no menus, no software.
+            Once you're signed up, everything happens through messages — no menus, no software to learn.
           </p>
         </div>
 
