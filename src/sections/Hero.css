@@ -136,6 +136,12 @@
   background: rgba(37, 211, 102, 0.05);
 }
 
+.hero__cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .hero__actions {
   display: flex;
   gap: 12px;
@@ -144,6 +150,12 @@
 
 .hero__cta-main {
   gap: 10px;
+}
+
+.hero__reassurance {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 /* Phone mockup */

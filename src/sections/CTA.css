@@ -102,6 +102,17 @@
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
+/* .btn-ghost defaults to dark text for light backgrounds — this section's
+   background is a dark gradient, so it needs its own light-text override. */
+.cta__btn-ghost {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cta__btn-ghost:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.12);
+}
+
 .cta__perks {
   display: flex;
   gap: 20px;

@@ -33,7 +33,7 @@ export default function CTA() {
               </svg>
               Start free — connect your WhatsApp
             </button>
-            <button className="btn btn-outline btn-lg" onClick={() => scrollTo('#demo')}>
+            <button className="btn btn-ghost cta__btn-ghost" onClick={() => scrollTo('#demo')}>
               Watch demo
             </button>
           </div>
