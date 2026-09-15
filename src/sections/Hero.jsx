@@ -27,17 +27,17 @@ export default function Hero() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path fillRule="evenodd" clipRule="evenodd" d="M20.52 3.48A11.93 11.93 0 0012 0C5.373 0 0 5.373 0 12c0 2.117.549 4.1 1.514 5.82L0 24l6.335-1.661A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12 0-3.207-1.248-6.219-3.48-8.52z" fill="currentColor"/>
             </svg>
-            Your WhatsApp Arabic Tutor
+            Learn Arabic on WhatsApp
           </div>
 
           <h1 className="hero__title">
-            Send a message.<br />
-            <span className="hero__title-accent">Learn Arabic.</span>
+            Your personal Arabic tutor —<br />
+            <span className="hero__title-accent">right in WhatsApp.</span>
           </h1>
 
           <p className="hero__subtitle">
-            A personal Arabic tutor that lives right inside WhatsApp. Guided lessons, voice notes,
-            free-form practice — no app to download, no login to remember.
+            Learn Arabic step-by-step through real conversations, structured lessons, and voice
+            messages — no app to download, no login to remember.
           </p>
 
           <div className="hero__capabilities">

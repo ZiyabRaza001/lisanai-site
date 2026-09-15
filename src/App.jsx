@@ -4,7 +4,7 @@ import { Analytics } from '@vercel/analytics/react'
 import Navbar from './components/Navbar'
 import CheckoutStatusModal from './components/CheckoutStatusModal'
 import Hero from './sections/Hero'
-import LogoStrip from './sections/LogoStrip'
+import WhyWhatsApp from './sections/WhyWhatsApp'
 import Features from './sections/Features'
 import Demo from './sections/Demo'
 import HowItWorks from './sections/HowItWorks'
@@ -28,7 +28,7 @@ function App() {
       <Navbar />
       <main>
         <Hero />
-        <LogoStrip />
+        <WhyWhatsApp />
         <Features />
         <Demo />
         <HowItWorks />
