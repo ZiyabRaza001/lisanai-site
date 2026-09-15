@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import './Hero.css'
+import { getAudienceVariant } from '../lib/audience'
 
 const chatMessages = [
   { from: 'user', text: 'hiya fi al bayt' },
@@ -9,7 +11,31 @@ const chatMessages = [
   { from: 'bot', text: 'Almost — على gives -i too: السريرِ, not السرير.\nممتاز otherwise! 🎉' },
 ]
 
+// Headline-only A/B copy — everything else on the page (Demo, Pricing, FAQ,
+// etc.) stays identical for both. Link a "quran" audience ad to
+// "?v=quran" to serve this instead of the default headline.
+const COPY = {
+  default: {
+    badge: 'Learn Arabic on WhatsApp',
+    titleLine1: 'Your personal Arabic tutor —',
+    titleAccent: 'right in WhatsApp.',
+    subtitle:
+      'Learn Arabic step-by-step through real conversations, structured lessons, and voice ' +
+      'messages — no app to download, no login to remember.',
+  },
+  quran: {
+    badge: 'Learn Arabic on WhatsApp',
+    titleLine1: 'Learn Arabic.',
+    titleAccent: 'Understand more.',
+    subtitle:
+      "Learn Arabic step-by-step to better understand the Qur'an, communicate with confidence, " +
+      'and build a real foundation — all through WhatsApp.',
+  },
+}
+
 export default function Hero() {
+  const [variant] = useState(getAudienceVariant)
+  const copy = COPY[variant]
   const scrollTo = (id) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
 
   return (
@@ -27,17 +53,16 @@ export default function Hero() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path fillRule="evenodd" clipRule="evenodd" d="M20.52 3.48A11.93 11.93 0 0012 0C5.373 0 0 5.373 0 12c0 2.117.549 4.1 1.514 5.82L0 24l6.335-1.661A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12 0-3.207-1.248-6.219-3.48-8.52z" fill="currentColor"/>
             </svg>
-            Learn Arabic on WhatsApp
+            {copy.badge}
           </div>
 
           <h1 className="hero__title">
-            Your personal Arabic tutor —<br />
-            <span className="hero__title-accent">right in WhatsApp.</span>
+            {copy.titleLine1}<br />
+            <span className="hero__title-accent">{copy.titleAccent}</span>
           </h1>
 
           <p className="hero__subtitle">
-            Learn Arabic step-by-step through real conversations, structured lessons, and voice
-            messages — no app to download, no login to remember.
+            {copy.subtitle}
           </p>
 
           <div className="hero__capabilities">
