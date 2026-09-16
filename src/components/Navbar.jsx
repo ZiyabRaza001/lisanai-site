@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { track } from '@vercel/analytics/react'
 import './Navbar.css'
 
 const navLinks = [
@@ -49,13 +50,13 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
-          <a href="#pricing" className="btn btn-primary navbar__cta--mobile" onClick={(e) => handleNavClick(e, '#pricing')}>
+          <a href="#pricing" className="btn btn-primary navbar__cta--mobile" onClick={(e) => { track('cta_click', { location: 'navbar' }); handleNavClick(e, '#pricing') }}>
             Start learning free
           </a>
         </nav>
 
         <div className="navbar__actions">
-          <a href="#pricing" className="btn btn-primary" onClick={(e) => handleNavClick(e, '#pricing')}>
+          <a href="#pricing" className="btn btn-primary" onClick={(e) => { track('cta_click', { location: 'navbar' }); handleNavClick(e, '#pricing') }}>
             Start learning free
           </a>
           <button

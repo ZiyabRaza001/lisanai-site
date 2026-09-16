@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { track } from '@vercel/analytics/react'
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import './Pricing.css'
@@ -43,28 +44,33 @@ export default function Pricing({ onTrialStarted }) {
 
   const startTrial = async () => {
     if (!showPhoneInput) {
+      track('signup_form_opened')
       setShowPhoneInput(true)
       return
     }
 
     if (!name.trim()) {
+      track('signup_validation_error', { field: 'name' })
       setError('Enter your name.')
       return
     }
 
     if (!email.trim() || !EMAIL_PATTERN.test(email.trim())) {
+      track('signup_validation_error', { field: 'email' })
       setError('Enter a valid email address.')
       return
     }
 
     const e164Phone = normalizePhone(phone)
     if (!e164Phone) {
+      track('signup_validation_error', { field: 'phone' })
       setError('Enter a valid WhatsApp number.')
       return
     }
 
     setError('')
     setLoading(true)
+    track('signup_submit_attempt')
 
     try {
       const res = await fetch('/api/start-trial', {
@@ -75,12 +81,14 @@ export default function Pricing({ onTrialStarted }) {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Could not start your trial — try again in a moment.')
 
+      track('signup_success')
       onTrialStarted?.(name.trim())
       setShowPhoneInput(false)
       setName('')
       setEmail('')
       setPhone('')
     } catch (err) {
+      track('signup_error', { message: err.message })
       setError(err.message)
     } finally {
       setLoading(false)

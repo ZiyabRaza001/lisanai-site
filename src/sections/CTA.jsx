@@ -1,3 +1,4 @@
+import { track } from '@vercel/analytics/react'
 import './CTA.css'
 
 export default function CTA() {
@@ -27,7 +28,7 @@ export default function CTA() {
           </p>
 
           <div className="cta__actions">
-            <button className="btn btn-lg cta__btn-primary" onClick={() => scrollTo('#pricing')}>
+            <button className="btn btn-lg cta__btn-primary" onClick={() => { track('cta_click', { location: 'cta_section' }); scrollTo('#pricing') }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path fillRule="evenodd" clipRule="evenodd" d="M20.52 3.48A11.93 11.93 0 0012 0C5.373 0 0 5.373 0 12c0 2.117.549 4.1 1.514 5.82L0 24l6.335-1.661A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12 0-3.207-1.248-6.219-3.48-8.52z" fill="currentColor"/>
               </svg>
