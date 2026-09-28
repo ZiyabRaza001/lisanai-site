@@ -13,7 +13,7 @@ import { buildWelcomeEmailHtml, buildWelcomeEmailText } from './_lib/welcomeEmai
 // subscription would.
 const resend = new Resend(envVar('RESEND_API_KEY'))
 
-const TRIAL_LENGTH_DAYS = 7
+const TRIAL_LENGTH_DAYS = 30
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
   const telefoonnummer = `whatsapp:${phone}`
 
   // Record the trial first. If this fails, stop here rather than sending a
-  // welcome email for a trial that was never actually recorded — the 7-day
+  // welcome email for a trial that was never actually recorded — the 30-day
   // clock and the bot's paywall gate both depend on this row existing.
   const { data: existing, error: lookupError } = await supabase
     .from('gebruikers')

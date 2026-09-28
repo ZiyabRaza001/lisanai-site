@@ -24,7 +24,7 @@ export default function CTA() {
             <span className="cta__title-accent">learn Arabic that sticks?</span>
           </h2>
           <p className="cta__subtitle">
-            7 days free to try — no credit card needed.
+            1 month free to try — no credit card needed.
           </p>
 
           <div className="cta__actions">
@@ -40,7 +40,7 @@ export default function CTA() {
           </div>
 
           <div className="cta__perks">
-            {['✓ 7 days free', '✓ No credit card', '✓ Cancel anytime', '✓ Works on any phone'].map((perk, i) => (
+            {['✓ 1 month free', '✓ No credit card', '✓ Cancel anytime', '✓ Works on any phone'].map((perk, i) => (
               <span key={i} className="cta__perk">{perk}</span>
             ))}
           </div>

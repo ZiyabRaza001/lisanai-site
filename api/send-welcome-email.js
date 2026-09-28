@@ -36,7 +36,7 @@ function buildEmailHtml(name, waNumber, waLink) {
         </div>
         <div style="background:white;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 20px 20px;padding:36px 40px;">
           <p style="font-size:15px;line-height:1.65;color:#374151;margin:0 0 24px;">
-            Your 7-day free trial just started — no charge until it ends, cancel anytime. Message the number below on WhatsApp and your tutor takes it from there.
+            Your 1-month free trial just started — no charge until it ends, cancel anytime. Message the number below on WhatsApp and your tutor takes it from there.
           </p>
           <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:14px;padding:18px 20px;text-align:center;margin-bottom:24px;">
             <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6B7280;margin-bottom:6px;">Your Arabic tutor on WhatsApp</div>
@@ -94,7 +94,7 @@ export default async function handler(req, res) {
           from: 'LisanAI <welcome@mail.lisanai.net>',
           to: email,
           subject: 'Welcome to LisanAI! Your free trial has started 🎉',
-          text: `Welcome${name && name !== 'there' ? `, ${name}` : ''}! 🎉\n\nYour 7-day free trial just started — no charge until it ends, cancel anytime.\n\nMessage your Arabic tutor on WhatsApp to get going:\n\n+${waNumber}\n\nOr just tap this link: ${waLink}\n\nSend "start" and you're straight into your first lesson — no app to download, nothing else to set up.\n\nQuestions? Just reply to this email — we read every one.\n\n— The LisanAI team\n\nManage or cancel your subscription: ${CUSTOMER_PORTAL_LINK}`,
+          text: `Welcome${name && name !== 'there' ? `, ${name}` : ''}! 🎉\n\nYour 1-month free trial just started — no charge until it ends, cancel anytime.\n\nMessage your Arabic tutor on WhatsApp to get going:\n\n+${waNumber}\n\nOr just tap this link: ${waLink}\n\nSend "start" and you're straight into your first lesson — no app to download, nothing else to set up.\n\nQuestions? Just reply to this email — we read every one.\n\n— The LisanAI team\n\nManage or cancel your subscription: ${CUSTOMER_PORTAL_LINK}`,
           html: buildEmailHtml(name, waNumber, waLink),
         })
       } catch (err) {

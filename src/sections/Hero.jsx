@@ -96,7 +96,7 @@ export default function Hero() {
                 </svg>
               </button>
             </div>
-            <p className="hero__reassurance">No card · Cancel anytime · 7 days free</p>
+            <p className="hero__reassurance">No card · Cancel anytime · 1 month free</p>
           </div>
         </div>
 

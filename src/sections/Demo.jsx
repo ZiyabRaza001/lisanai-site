@@ -237,7 +237,7 @@ export default function Demo() {
             </svg>
             Try It Free
           </button>
-          <p className="demo__cta-note">No card · Cancel anytime · 7 days free</p>
+          <p className="demo__cta-note">No card · Cancel anytime · 1 month free</p>
         </div>
       </div>
     </section>

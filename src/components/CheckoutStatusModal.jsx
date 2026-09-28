@@ -17,7 +17,7 @@ export default function CheckoutStatusModal({ open, name, onClose }) {
 
         <div className="checkout-modal__badge">🎉</div>
         <h3 className="checkout-modal__title">Welcome{name ? `, ${name}` : ''}!</h3>
-        <p className="checkout-modal__text">Your 7-day free trial just started — no card, no charge. Message this number on WhatsApp to meet your tutor:</p>
+        <p className="checkout-modal__text">Your 1-month free trial just started — no card, no charge. Message this number on WhatsApp to meet your tutor:</p>
 
         <div className="checkout-modal__number-pill">
           <span className="checkout-modal__number-dot" />
@@ -35,7 +35,7 @@ export default function CheckoutStatusModal({ open, name, onClose }) {
 
         <div className="checkout-modal__footer-notes">
           <p>📧 We've also emailed this to you — check spam if you don't see it.</p>
-          <p>💳 No card needed. Free for 7 days.</p>
+          <p>💳 No card needed. Free for 1 month.</p>
         </div>
       </div>
     </div>

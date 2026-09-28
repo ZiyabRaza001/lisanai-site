@@ -105,13 +105,13 @@ export default function Pricing({ onTrialStarted }) {
             <span className="pricing__title-accent">no surprises</span>
           </h2>
           <p className="section-subtitle">
-            Try LisanAI free for 7 days — no card needed. Keep going after for €4.95/month (normally €11.90).
+            Try LisanAI free for 1 month — no card needed. Keep going after for €4.95/month (normally €11.90).
           </p>
         </div>
 
         <div className="pricing__grid pricing__grid--two">
           <div className="pricing-card pricing-card--highlight">
-            <div className="pricing-card__badge">7 days free</div>
+            <div className="pricing-card__badge">1 month free</div>
             <div className="pricing-card__header">
               <span className="pricing-card__icon">💬</span>
               <h3 className="pricing-card__name">LisanAI</h3>
@@ -120,14 +120,14 @@ export default function Pricing({ onTrialStarted }) {
 
             <div className="pricing-card__price">
               <span className="pricing-card__amount">Free</span>
-              <span className="pricing-card__period">for 7 days</span>
+              <span className="pricing-card__period">for 1 month</span>
             </div>
             <div className="pricing-card__discount-row">
               <span className="pricing-card__then-price">then €4.95/month</span>
               <span className="pricing-card__original">€11.90/month</span>
               <span className="pricing-card__discount-flag">Save 58%</span>
             </div>
-            <p className="pricing-card__price-note">Free for your first 7 days, no card required. We'll message you on WhatsApp with a link to continue for €4.95/month if you'd like to keep learning.</p>
+            <p className="pricing-card__price-note">Free for your first month, no card required. We'll message you on WhatsApp with a link to continue for €4.95/month if you'd like to keep learning.</p>
 
             <ul className="pricing-card__features">
               {features.map((f, j) => (
@@ -182,7 +182,7 @@ export default function Pricing({ onTrialStarted }) {
             {error && <p className="pricing-card__error">{error}</p>}
 
             <button className="btn btn-lg pricing-card__cta btn-primary" onClick={startTrial} disabled={loading}>
-              {loading ? 'Starting your trial…' : showPhoneInput ? 'Start my free trial' : 'Start my free week'}
+              {loading ? 'Starting your trial…' : showPhoneInput ? 'Start my free trial' : 'Start my free month'}
             </button>
           </div>
 
@@ -219,7 +219,7 @@ export default function Pricing({ onTrialStarted }) {
         <div className="pricing__guarantee">
           <span className="pricing__guarantee-icon">🛡️</span>
           <p>
-            <strong>No card, no charge.</strong> Try free for 7 days — we'll only ask for payment on WhatsApp if you decide to continue.
+            <strong>No card, no charge.</strong> Try free for 1 month — we'll only ask for payment on WhatsApp if you decide to continue.
           </p>
         </div>
       </div>
