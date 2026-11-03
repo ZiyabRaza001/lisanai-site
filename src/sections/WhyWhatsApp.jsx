@@ -1,8 +1,8 @@
 import './WhyWhatsApp.css'
 
 const points = [
+  { icon: '📚', title: '60+ professional lessons', desc: 'A real, structured curriculum from absolute beginner to advanced — not random content.' },
   { icon: '📱', title: 'WhatsApp', desc: 'Learn directly where you already chat — nothing new to open.' },
-  { icon: '📚', title: '60+ lessons', desc: 'Follow a structured path instead of randomly picking up words.' },
   { icon: '🗣️', title: 'Voice practice', desc: 'Practice speaking and listening through real voice messages.' },
   { icon: '✍️', title: 'Instant corrections', desc: "Make a mistake and learn from it right away, not days later." },
   { icon: '🔤', title: 'Arabic + transliteration', desc: "Read what you're learning while gradually picking up the script." },

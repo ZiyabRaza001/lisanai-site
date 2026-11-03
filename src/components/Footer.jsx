@@ -1,7 +1,8 @@
 import './Footer.css'
+import { waLink } from '../lib/whatsapp'
 
 const footerLinks = {
-  Product: ['Features', 'Demo', 'Sign up', 'Curriculum', 'Changelog'],
+  Product: ['Features', 'Demo', 'Start learning', 'Curriculum', 'Changelog'],
   Company: ['About us', 'Blog', 'Contact', 'WhatsApp us', 'Press'],
   Support: ['Help center', 'Documentation', 'Status', 'Onboarding'],
   Legal: ['Privacy policy', 'Terms of service', 'Data & cookies', 'Security'],
@@ -73,17 +74,10 @@ export default function Footer() {
                         </li>
                       )
                     }
-                    if (link === 'Sign up') {
+                    if (link === 'Start learning' || link === 'WhatsApp us') {
                       return (
                         <li key={link}>
-                          <a
-                            href="#signup"
-                            className="footer__link"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              document.querySelector('#signup')?.scrollIntoView({ behavior: 'smooth' })
-                            }}
-                          >
+                          <a href={waLink('start')} target="_blank" rel="noopener noreferrer" className="footer__link">
                             {link}
                           </a>
                         </li>

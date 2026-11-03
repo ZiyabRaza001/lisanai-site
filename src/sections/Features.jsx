@@ -2,7 +2,7 @@ import './Features.css'
 
 const featureGroups = [
   {
-    category: 'A — Guided Lessons',
+    category: 'A — 60+ Guided Lessons',
     emoji: '📖',
     color: '#25D366',
     features: [
@@ -23,8 +23,8 @@ const featureGroups = [
       },
       {
         icon: '🗂️',
-        title: 'Clear structure, never overwhelming',
-        desc: 'Long lessons are neatly organized into grammar, notes, and vocabulary sections so it never feels like a wall of text.',
+        title: '60+ lessons, professionally structured',
+        desc: 'A real curriculum, not random content — each of the 60+ lessons builds on the last, organized into grammar, notes, and vocabulary sections so it never feels like a wall of text.',
       },
     ],
   },

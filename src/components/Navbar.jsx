@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { track } from '@vercel/analytics/react'
 import './Navbar.css'
+import { waLink } from '../lib/whatsapp'
 
 const navLinks = [
   { label: 'Features', href: '#features' },
   { label: 'Demo', href: '#demo' },
   { label: 'How it works', href: '#how-it-works' },
-  { label: 'Sign up', href: '#signup' },
   { label: 'FAQ', href: '#faq' },
   { label: 'Contact', href: '#contact' },
 ]
@@ -50,13 +50,25 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
-          <a href="#signup" className="btn btn-primary navbar__cta--mobile" onClick={(e) => { track('cta_click', { location: 'navbar' }); handleNavClick(e, '#signup') }}>
+          <a
+            href={waLink('start')}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary navbar__cta--mobile"
+            onClick={() => track('cta_click', { location: 'navbar' })}
+          >
             Start learning free
           </a>
         </nav>
 
         <div className="navbar__actions">
-          <a href="#signup" className="btn btn-primary" onClick={(e) => { track('cta_click', { location: 'navbar' }); handleNavClick(e, '#signup') }}>
+          <a
+            href={waLink('start')}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+            onClick={() => track('cta_click', { location: 'navbar' })}
+          >
             Start learning free
           </a>
           <button

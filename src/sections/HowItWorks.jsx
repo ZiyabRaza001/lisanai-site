@@ -1,39 +1,37 @@
 import { track } from '@vercel/analytics/react'
 import './HowItWorks.css'
+import { waLink } from '../lib/whatsapp'
 
 const steps = [
   {
     number: '01',
-    icon: '📝',
-    title: 'Sign up',
-    desc: 'Enter your name, email, and WhatsApp number on this page — no card, nothing to install. Takes less than a minute.',
-    detail: 'No card needed',
-    time: '1 min',
+    icon: '📱',
+    title: 'Message the bot',
+    desc: 'Tap the button below and WhatsApp opens with your tutor, ready to go. No signup, no app to install.',
+    detail: 'Works on iPhone & Android',
+    time: 'Instant',
   },
   {
     number: '02',
     icon: '💬',
-    title: 'Start chatting',
-    desc: 'We message you on WhatsApp right away. Say hi, and you\'re straight into your first lesson — pick guided lessons or just chat and practice.',
+    title: 'Start learning',
+    desc: 'Say hi, pick guided lessons or free chat, and jump straight into your first lesson.',
     detail: 'Guided lessons or free chat',
     time: 'Instant',
   },
 ]
 
 export default function HowItWorks() {
-  const scrollTo = (id) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
-
   return (
     <section className="how-it-works" id="how-it-works">
       <div className="container">
         <div className="how__header">
           <div className="section-tag">How it works</div>
           <h2 className="section-title">
-            Ready in <span className="how__title-accent">under 2 minutes</span>
+            Ready in <span className="how__title-accent">seconds</span>
           </h2>
           <p className="section-subtitle">
-            One quick sign-up, no card, no app to install.
-            Then it's just WhatsApp, the way you already use it.
+            No signup, no app, no password — just tap and start chatting.
           </p>
         </div>
 
@@ -80,17 +78,23 @@ export default function HowItWorks() {
             </div>
           </div>
           <p className="how__example-note">
-            Once you're signed up, everything happens through messages — no menus, no software to learn.
+            That's it. Everything happens through messages — no buttons, no menus, no software.
           </p>
         </div>
 
         <div className="how__cta">
-          <button className="btn btn-primary btn-lg" onClick={() => { track('cta_click', { location: 'how_it_works' }); scrollTo('#signup') }}>
+          <a
+            href={waLink('start')}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary btn-lg"
+            onClick={() => track('cta_click', { location: 'how_it_works' })}
+          >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path fillRule="evenodd" clipRule="evenodd" d="M20.52 3.48A11.93 11.93 0 0012 0C5.373 0 0 5.373 0 12c0 2.117.549 4.1 1.514 5.82L0 24l6.335-1.661A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12 0-3.207-1.248-6.219-3.48-8.52z" fill="white"/>
             </svg>
             Start now — it's free
-          </button>
+          </a>
         </div>
       </div>
     </section>
