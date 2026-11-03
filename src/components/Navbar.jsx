@@ -6,7 +6,7 @@ const navLinks = [
   { label: 'Features', href: '#features' },
   { label: 'Demo', href: '#demo' },
   { label: 'How it works', href: '#how-it-works' },
-  { label: 'Pricing', href: '#pricing' },
+  { label: 'Sign up', href: '#signup' },
   { label: 'FAQ', href: '#faq' },
   { label: 'Contact', href: '#contact' },
 ]
@@ -50,13 +50,13 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
-          <a href="#pricing" className="btn btn-primary navbar__cta--mobile" onClick={(e) => { track('cta_click', { location: 'navbar' }); handleNavClick(e, '#pricing') }}>
+          <a href="#signup" className="btn btn-primary navbar__cta--mobile" onClick={(e) => { track('cta_click', { location: 'navbar' }); handleNavClick(e, '#signup') }}>
             Start learning free
           </a>
         </nav>
 
         <div className="navbar__actions">
-          <a href="#pricing" className="btn btn-primary" onClick={(e) => { track('cta_click', { location: 'navbar' }); handleNavClick(e, '#pricing') }}>
+          <a href="#signup" className="btn btn-primary" onClick={(e) => { track('cta_click', { location: 'navbar' }); handleNavClick(e, '#signup') }}>
             Start learning free
           </a>
           <button

@@ -1,11 +1,9 @@
 import './Footer.css'
 
-const CUSTOMER_PORTAL_LINK = 'https://billing.stripe.com/p/login/bJe9ATeaQgbY5rufTT8N200'
-
 const footerLinks = {
-  Product: ['Features', 'Demo', 'Pricing', 'Curriculum', 'Changelog'],
+  Product: ['Features', 'Demo', 'Sign up', 'Curriculum', 'Changelog'],
   Company: ['About us', 'Blog', 'Contact', 'WhatsApp us', 'Press'],
-  Support: ['Help center', 'Documentation', 'Status', 'Manage subscription', 'Onboarding'],
+  Support: ['Help center', 'Documentation', 'Status', 'Onboarding'],
   Legal: ['Privacy policy', 'Terms of service', 'Data & cookies', 'Security'],
 }
 
@@ -75,10 +73,17 @@ export default function Footer() {
                         </li>
                       )
                     }
-                    if (link === 'Manage subscription') {
+                    if (link === 'Sign up') {
                       return (
                         <li key={link}>
-                          <a href={CUSTOMER_PORTAL_LINK} target="_blank" rel="noopener noreferrer" className="footer__link">
+                          <a
+                            href="#signup"
+                            className="footer__link"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              document.querySelector('#signup')?.scrollIntoView({ behavior: 'smooth' })
+                            }}
+                          >
                             {link}
                           </a>
                         </li>

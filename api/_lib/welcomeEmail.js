@@ -1,5 +1,3 @@
-const CUSTOMER_PORTAL_LINK = 'https://billing.stripe.com/p/login/bJe9ATeaQgbY5rufTT8N200'
-
 export function buildWelcomeEmailHtml(name, waNumber, waLink) {
   return `
     <div style="background:#F3F4F6;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
@@ -11,7 +9,7 @@ export function buildWelcomeEmailHtml(name, waNumber, waLink) {
         </div>
         <div style="background:white;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 20px 20px;padding:36px 40px;">
           <p style="font-size:15px;line-height:1.65;color:#374151;margin:0 0 24px;">
-            Your 1-month free trial just started — no card, no charge. Message the number below on WhatsApp and your tutor takes it from there.
+            You're all set — LisanAI is 100% free to use, no card, no subscription, ever. Message the number below on WhatsApp and your tutor takes it from there.
           </p>
           <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:14px;padding:18px 20px;text-align:center;margin-bottom:24px;">
             <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6B7280;margin-bottom:6px;">Your Arabic tutor on WhatsApp</div>
@@ -26,12 +24,9 @@ export function buildWelcomeEmailHtml(name, waNumber, waLink) {
             Just send <strong style="color:#111827;">"start"</strong> and you're straight into your first lesson — no app to download, nothing else to set up.
           </p>
           <hr style="border:none;border-top:1px solid #E5E7EB;margin:0 0 20px;" />
-          <p style="font-size:13px;color:#9CA3AF;margin:0 0 10px;line-height:1.6;text-align:center;">
+          <p style="font-size:13px;color:#9CA3AF;margin:0;line-height:1.6;text-align:center;">
             Questions? Just reply to this email — we read every one.<br />
             — The LisanAI team
-          </p>
-          <p style="font-size:12px;color:#9CA3AF;margin:0;line-height:1.6;text-align:center;">
-            <a href="${CUSTOMER_PORTAL_LINK}" style="color:#9CA3AF;">Manage or cancel your subscription</a>
           </p>
         </div>
       </div>
@@ -40,5 +35,5 @@ export function buildWelcomeEmailHtml(name, waNumber, waLink) {
 }
 
 export function buildWelcomeEmailText(name, waNumber, waLink) {
-  return `Welcome${name && name !== 'there' ? `, ${name}` : ''}! 🎉\n\nYour 1-month free trial just started — no card, no charge.\n\nMessage your Arabic tutor on WhatsApp to get going:\n\n+${waNumber}\n\nOr just tap this link: ${waLink}\n\nSend "start" and you're straight into your first lesson — no app to download, nothing else to set up.\n\nQuestions? Just reply to this email — we read every one.\n\n— The LisanAI team\n\nManage or cancel your subscription: ${CUSTOMER_PORTAL_LINK}`
+  return `Welcome${name && name !== 'there' ? `, ${name}` : ''}! 🎉\n\nYou're all set — LisanAI is 100% free to use, no card, no subscription, ever.\n\nMessage your Arabic tutor on WhatsApp to get going:\n\n+${waNumber}\n\nOr just tap this link: ${waLink}\n\nSend "start" and you're straight into your first lesson — no app to download, nothing else to set up.\n\nQuestions? Just reply to this email — we read every one.\n\n— The LisanAI team`
 }

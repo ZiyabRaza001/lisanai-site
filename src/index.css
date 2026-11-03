@@ -178,8 +178,7 @@ ul {
    secondary action placed right next to the primary CTA, where an
    equally-sized, equally-bordered button competes for the click instead
    of clearly taking a back seat to it. Not used for same-weight controls
-   like Demo's Next/Replay or the sold-out Pricing button — those keep
-   .btn-secondary. */
+   like Demo's Next/Replay button — those keep .btn-secondary. */
 .btn-ghost {
   background: transparent;
   border: none;

@@ -1,4 +1,4 @@
-.checkout-modal__overlay {
+.signup-modal__overlay {
   position: fixed;
   inset: 0;
   background: rgba(17, 24, 39, 0.6);
@@ -11,7 +11,7 @@
   animation: fadeIn 0.2s ease;
 }
 
-.checkout-modal__card {
+.signup-modal__card {
   position: relative;
   background: white;
   border-radius: var(--radius-xl);
@@ -24,7 +24,7 @@
   overflow: hidden;
 }
 
-.checkout-modal__blob {
+.signup-modal__blob {
   position: absolute;
   border-radius: 50%;
   filter: blur(50px);
@@ -33,7 +33,7 @@
   z-index: 0;
 }
 
-.checkout-modal__blob--1 {
+.signup-modal__blob--1 {
   width: 220px;
   height: 220px;
   background: var(--primary);
@@ -41,7 +41,7 @@
   left: -80px;
 }
 
-.checkout-modal__blob--2 {
+.signup-modal__blob--2 {
   width: 180px;
   height: 180px;
   background: var(--accent);
@@ -49,7 +49,7 @@
   right: -70px;
 }
 
-.checkout-modal__close {
+.signup-modal__close {
   position: absolute;
   top: 16px;
   right: 16px;
@@ -67,12 +67,12 @@
   z-index: 1;
 }
 
-.checkout-modal__close:hover {
+.signup-modal__close:hover {
   background: var(--bg-gray);
   color: var(--text-primary);
 }
 
-.checkout-modal__badge {
+.signup-modal__badge {
   position: relative;
   z-index: 1;
   width: 68px;
@@ -88,12 +88,12 @@
   animation: fadeInUp 0.4s 0.1s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
-.checkout-modal__badge--muted {
+.signup-modal__badge--muted {
   background: var(--bg-gray);
   box-shadow: none;
 }
 
-.checkout-modal__title {
+.signup-modal__title {
   position: relative;
   z-index: 1;
   font-size: 26px;
@@ -103,7 +103,7 @@
   letter-spacing: -0.3px;
 }
 
-.checkout-modal__text {
+.signup-modal__text {
   position: relative;
   z-index: 1;
   font-size: 15px;
@@ -112,7 +112,7 @@
   margin-bottom: 20px;
 }
 
-.checkout-modal__number-pill {
+.signup-modal__number-pill {
   position: relative;
   z-index: 1;
   display: inline-flex;
@@ -129,7 +129,7 @@
   box-shadow: 0 8px 20px rgba(37, 211, 102, 0.35);
 }
 
-.checkout-modal__number-dot {
+.signup-modal__number-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -138,14 +138,14 @@
   animation: pulse-glow 1.8s ease-in-out infinite;
 }
 
-.checkout-modal__cta {
+.signup-modal__cta {
   position: relative;
   z-index: 1;
   width: 100%;
   margin-bottom: 20px;
 }
 
-.checkout-modal__footer-notes {
+.signup-modal__footer-notes {
   position: relative;
   z-index: 1;
   padding-top: 16px;
@@ -155,18 +155,18 @@
   gap: 6px;
 }
 
-.checkout-modal__footer-notes p {
+.signup-modal__footer-notes p {
   font-size: 13px;
   color: var(--text-muted);
   line-height: 1.5;
 }
 
 @media (max-width: 480px) {
-  .checkout-modal__card {
+  .signup-modal__card {
     padding: 36px 24px 28px;
   }
 
-  .checkout-modal__number-pill {
+  .signup-modal__number-pill {
     font-size: 17px;
     padding: 10px 18px;
   }

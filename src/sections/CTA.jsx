@@ -24,11 +24,11 @@ export default function CTA() {
             <span className="cta__title-accent">learn Arabic that sticks?</span>
           </h2>
           <p className="cta__subtitle">
-            1 month free to try — no credit card needed.
+            100% free — no credit card, ever.
           </p>
 
           <div className="cta__actions">
-            <button className="btn btn-lg cta__btn-primary" onClick={() => { track('cta_click', { location: 'cta_section' }); scrollTo('#pricing') }}>
+            <button className="btn btn-lg cta__btn-primary" onClick={() => { track('cta_click', { location: 'cta_section' }); scrollTo('#signup') }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path fillRule="evenodd" clipRule="evenodd" d="M20.52 3.48A11.93 11.93 0 0012 0C5.373 0 0 5.373 0 12c0 2.117.549 4.1 1.514 5.82L0 24l6.335-1.661A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12 0-3.207-1.248-6.219-3.48-8.52z" fill="currentColor"/>
               </svg>
@@ -40,7 +40,7 @@ export default function CTA() {
           </div>
 
           <div className="cta__perks">
-            {['✓ 1 month free', '✓ No credit card', '✓ Cancel anytime', '✓ Works on any phone'].map((perk, i) => (
+            {['✓ 100% free', '✓ No credit card', '✓ No catch', '✓ Works on any phone'].map((perk, i) => (
               <span key={i} className="cta__perk">{perk}</span>
             ))}
           </div>

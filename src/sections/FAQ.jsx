@@ -44,9 +44,8 @@ const faqs = [
     a: 'Your messages and learning data are stored encrypted and never shared with third parties. WhatsApp conversations are end-to-end encrypted the same way any WhatsApp chat is.',
   },
   {
-    q: 'How do I cancel my subscription?',
-    a: 'Anytime, yourself, no need to contact us. Use the link below, enter the email you paid with, and Stripe emails you a one-time code to manage or cancel your subscription.',
-    link: { href: 'https://billing.stripe.com/p/login/bJe9ATeaQgbY5rufTT8N200', label: 'Manage or cancel your subscription →' },
+    q: 'Is LisanAI really free?',
+    a: 'Yes — LisanAI is currently completely free to use. No card, no subscription, nothing to pay. Just message the bot and start learning.',
   },
 ]
 

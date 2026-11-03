@@ -4,16 +4,16 @@ import { envVar } from './_lib/env.js'
 import { supabase } from './_lib/supabase.js'
 import { buildWelcomeEmailHtml, buildWelcomeEmailText } from './_lib/welcomeEmail.js'
 
-// Card-free trial signup. Replaces the old flow where this page redirected
-// straight to a Stripe Payment Link — no Stripe involved here at all.
-// Writes the trial row directly to the same `gebruikers` table the bot reads
-// (see the "Heeft Actief Abonnement?" n8n node) — abonnement_status/
-// abonnement_verloopt_op are set to exactly what that node's condition
-// checks for, so a fresh signup passes the same gate a real Stripe
-// subscription would.
+// Free signup — LisanAI has no paid tier or payment flow at all. Writes the
+// signup row directly to the same `gebruikers` table the bot reads (see the
+// "Heeft Actief Abonnement?" n8n node). That node's condition still checks
+// abonnement_status is 'trialing'/'active' AND abonnement_verloopt_op is in
+// the future — rather than touch that gate from the n8n side, this just
+// gives every signup an expiry far enough out that it never meaningfully
+// expires, so a free signup passes the same gate a paid one used to.
 const resend = new Resend(envVar('RESEND_API_KEY'))
 
-const TRIAL_LENGTH_DAYS = 30
+const NEVER_EXPIRES_YEARS = 100
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -50,9 +50,9 @@ export default async function handler(req, res) {
   // created here is the same row the bot finds on someone's first message.
   const telefoonnummer = `whatsapp:${phone}`
 
-  // Record the trial first. If this fails, stop here rather than sending a
-  // welcome email for a trial that was never actually recorded — the 30-day
-  // clock and the bot's paywall gate both depend on this row existing.
+  // Record the signup first. If this fails, stop here rather than sending a
+  // welcome email for a signup that was never actually recorded — the bot's
+  // access gate depends on this row existing.
   const { data: existing, error: lookupError } = await supabase
     .from('gebruikers')
     .select('id')
@@ -61,30 +61,30 @@ export default async function handler(req, res) {
 
   if (lookupError) {
     console.error('Failed to look up existing gebruikers row:', lookupError)
-    return res.status(502).json({ error: 'Could not start your trial — try again in a moment.' })
+    return res.status(502).json({ error: 'Could not sign you up — try again in a moment.' })
   }
 
   if (existing) {
-    // Don't touch an existing row from here — it may belong to a real
-    // paying customer with live Stripe IDs on it. A signup form is not the
-    // place to silently overwrite that.
+    // Don't touch an existing row from here — someone may already have an
+    // account. A signup form is not the place to silently overwrite it.
     return res.status(409).json({ error: 'Looks like you already have an account — just message LisanAI on WhatsApp to continue.' })
   }
 
-  const trialEndsAt = new Date(Date.now() + TRIAL_LENGTH_DAYS * 24 * 60 * 60 * 1000).toISOString()
+  const accessExpiresAt = new Date()
+  accessExpiresAt.setFullYear(accessExpiresAt.getFullYear() + NEVER_EXPIRES_YEARS)
 
   const { error: insertError } = await supabase.from('gebruikers').insert({
     telefoonnummer,
     naam: name,
     email,
     abonnement_status: 'active',
-    abonnement_verloopt_op: trialEndsAt,
+    abonnement_verloopt_op: accessExpiresAt.toISOString(),
     modus: 'geen_modus',
   })
 
   if (insertError) {
-    console.error('Failed to insert trial signup:', insertError)
-    return res.status(502).json({ error: 'Could not start your trial — try again in a moment.' })
+    console.error('Failed to insert signup:', insertError)
+    return res.status(502).json({ error: 'Could not sign you up — try again in a moment.' })
   }
 
   const waNumber = envVar('VITE_WHATSAPP_NUMBER')
@@ -94,19 +94,18 @@ export default async function handler(req, res) {
       await resend.emails.send({
         from: 'LisanAI <welcome@mail.lisanai.net>',
         to: email,
-        subject: 'Welcome to LisanAI! Your free trial has started 🎉',
+        subject: 'Welcome to LisanAI! 🎉',
         text: buildWelcomeEmailText(name, waNumber, waLink),
         html: buildWelcomeEmailHtml(name, waNumber, waLink),
       })
     } catch (err) {
-      // The trial is already recorded in Supabase at this point, so don't
-      // fail the request over an email hiccup — log it and let the
-      // success response (and on-page popup) still carry the WhatsApp
-      // number through.
-      console.error('Failed to send trial welcome email:', err)
+      // The signup is already recorded in Supabase at this point, so don't
+      // fail the request over an email hiccup — log it and let the success
+      // response (and on-page popup) still carry the WhatsApp number through.
+      console.error('Failed to send welcome email:', err)
     }
   } else {
-    console.error('Trial welcome email skipped — VITE_WHATSAPP_NUMBER is not set')
+    console.error('Welcome email skipped — VITE_WHATSAPP_NUMBER is not set')
   }
 
   res.status(200).json({ success: true })
