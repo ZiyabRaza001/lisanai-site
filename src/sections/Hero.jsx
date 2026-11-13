@@ -29,10 +29,10 @@ const COPY = {
 }
 
 const STAGES = {
-  dist: [0, 0.3],
-  door: [0.22, 0.52],
-  inside: [0.42, 0.62],
-  zoom: [0.54, 0.88],
+  dist: [0, 0.4],
+  door: [0.32, 0.58],
+  inside: [0.48, 0.66],
+  zoom: [0.58, 0.88],
   content: [0.8, 1],
 }
 

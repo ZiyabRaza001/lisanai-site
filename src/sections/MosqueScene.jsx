@@ -8,6 +8,12 @@ import sandstoneRough from '../assets/textures/sandstone_rough_1k.jpg'
 
 const GOLD = { color: '#d4af37', metalness: 0.85, roughness: 0.32 }
 const GOLD_BRIGHT = { color: '#f0cf7a', metalness: 0.8, roughness: 0.25 }
+// Clean white/cream marble-toned material for the building itself — procedural
+// (color + roughness, no texture), which reads as "modern" rather than aged
+// stone, and avoids chasing down a second textured asset's licensing when
+// material properties alone already look right for a smooth marble surface.
+const MARBLE = { color: '#f2ede1', roughness: 0.38, metalness: 0.05 }
+const MARBLE_SHADOW = { color: '#d8d0bf', roughness: 0.42, metalness: 0.05 }
 
 const chatMessages = [
   { from: 'user', text: 'hiya fi al bayt' },
@@ -63,6 +69,10 @@ export function PhoneMockup() {
 const DOOR_GAP_HALF_W = 1.2
 const DOOR_H = 4.1
 const DOOR_W = 1.08
+// Terrace/plinth the whole building and all four minarets stand on.
+const TERRACE_X = 11
+const TERRACE_Z_FRONT = 9
+const TERRACE_Z_BACK = -9
 
 function useSandstone(repeatX, repeatY) {
   const [diff, nor, rough] = useTexture([sandstoneDiff, sandstoneNor, sandstoneRough])
@@ -95,8 +105,35 @@ function Door({ hingeX, openSign, progressRef }) {
   )
 }
 
+// A minaret standing on its own small pedestal, for one corner of the terrace.
+function Minaret({ position }) {
+  return (
+    <group position={position}>
+      <mesh position={[0, 0.3, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.9, 1, 0.6, 16]} />
+        <meshStandardMaterial {...MARBLE_SHADOW} />
+      </mesh>
+      <mesh position={[0, 6.6, 0]} castShadow>
+        <cylinderGeometry args={[0.5, 0.6, 12, 16]} />
+        <meshStandardMaterial {...MARBLE} />
+      </mesh>
+      <mesh position={[0, 13, 0]} castShadow>
+        <cylinderGeometry args={[0.72, 0.6, 0.5, 16]} />
+        <meshStandardMaterial {...GOLD} />
+      </mesh>
+      <mesh position={[0, 13.8, 0]} castShadow>
+        <coneGeometry args={[0.6, 1.1, 16]} />
+        <meshStandardMaterial {...GOLD} />
+      </mesh>
+      <mesh position={[0, 14.5, 0]} castShadow>
+        <sphereGeometry args={[0.13, 10, 10]} />
+        <meshStandardMaterial {...GOLD_BRIGHT} emissive="#f0cf7a" emissiveIntensity={0.3} />
+      </mesh>
+    </group>
+  )
+}
+
 function Facade({ progressRef }) {
-  const wallMat = useSandstone(2.5, 2.5)
   const domeRef = useRef(null)
 
   useFrame(() => {
@@ -107,48 +144,91 @@ function Facade({ progressRef }) {
 
   return (
     <group>
+      {/* Raised marble terrace the whole building stands on */}
+      <mesh position={[0, 0.3, (TERRACE_Z_FRONT + TERRACE_Z_BACK) / 2]} receiveShadow>
+        <boxGeometry args={[TERRACE_X * 2, 0.6, TERRACE_Z_FRONT - TERRACE_Z_BACK]} />
+        <meshStandardMaterial {...MARBLE_SHADOW} />
+      </mesh>
+
       {/* Left + right facade walls, framing the doorway gap (no back wall, so the
           camera can pass straight through the gap into the interior later) */}
-      <mesh position={[-(DOOR_GAP_HALF_W + 2.4), 3, 0]} castShadow receiveShadow>
+      <mesh position={[-(DOOR_GAP_HALF_W + 2.4), 3.6, 0]} castShadow receiveShadow>
         <boxGeometry args={[4.8, 6, 1]} />
-        <meshStandardMaterial {...wallMat} />
+        <meshStandardMaterial {...MARBLE} />
       </mesh>
-      <mesh position={[DOOR_GAP_HALF_W + 2.4, 3, 0]} castShadow receiveShadow>
+      <mesh position={[DOOR_GAP_HALF_W + 2.4, 3.6, 0]} castShadow receiveShadow>
         <boxGeometry args={[4.8, 6, 1]} />
-        <meshStandardMaterial {...wallMat} />
+        <meshStandardMaterial {...MARBLE} />
       </mesh>
       {/* Lintel above the doorway */}
-      <mesh position={[0, DOOR_H + 0.9, 0]} castShadow receiveShadow>
+      <mesh position={[0, DOOR_H + 1.5, 0]} castShadow receiveShadow>
         <boxGeometry args={[DOOR_GAP_HALF_W * 2, 1.8, 1]} />
-        <meshStandardMaterial {...wallMat} />
+        <meshStandardMaterial {...MARBLE} />
       </mesh>
 
-      {/* Minarets */}
-      {[-1, 1].map((side) => (
-        <group key={side} position={[side * 8.4, 0, 0.3]}>
-          <mesh position={[0, 6, 0]} castShadow>
-            <cylinderGeometry args={[0.55, 0.65, 12, 16]} />
-            <meshStandardMaterial {...wallMat} />
-          </mesh>
-          <mesh position={[0, 12.6, 0]} castShadow>
-            <coneGeometry args={[0.7, 1.3, 16]} />
-            <meshStandardMaterial {...GOLD} />
-          </mesh>
-        </group>
-      ))}
+      {/* Four minarets, one on each corner of the terrace */}
+      <Minaret position={[-TERRACE_X + 1.5, 0.6, TERRACE_Z_FRONT - 1.5]} />
+      <Minaret position={[TERRACE_X - 1.5, 0.6, TERRACE_Z_FRONT - 1.5]} />
+      <Minaret position={[-TERRACE_X + 1.5, 0.6, TERRACE_Z_BACK + 1.5]} />
+      <Minaret position={[TERRACE_X - 1.5, 0.6, TERRACE_Z_BACK + 1.5]} />
+
+      {/* Drum beneath the dome, for the bulbous onion-dome-on-a-cylinder
+          silhouette rather than a dome sitting flush on the roofline */}
+      <mesh position={[0, 7.3, 0]} castShadow>
+        <cylinderGeometry args={[2.6, 2.8, 2, 20]} />
+        <meshStandardMaterial {...MARBLE} />
+      </mesh>
 
       {/* Dome */}
-      <mesh ref={domeRef} position={[0, 9.5, 0]} scale={[1, 1.25, 1]} castShadow>
-        <sphereGeometry args={[3, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
-        <meshStandardMaterial {...GOLD_BRIGHT} transparent />
+      <mesh ref={domeRef} position={[0, 10.3, 0]} scale={[1.15, 1.35, 1.15]} castShadow>
+        <sphereGeometry args={[3, 28, 18, 0, Math.PI * 2, 0, Math.PI * 0.58]} />
+        <meshStandardMaterial {...MARBLE} transparent />
       </mesh>
-      <mesh position={[0, 12.2, 0]} castShadow>
-        <sphereGeometry args={[0.18, 12, 12]} />
+      <mesh position={[0, 13.6, 0]} castShadow>
+        <cylinderGeometry args={[0.16, 0.2, 0.9, 10]} />
+        <meshStandardMaterial {...GOLD} />
+      </mesh>
+      <mesh position={[0, 14.2, 0]} castShadow>
+        <sphereGeometry args={[0.2, 12, 12]} />
         <meshStandardMaterial {...GOLD_BRIGHT} emissive="#f0cf7a" emissiveIntensity={0.4} />
       </mesh>
 
       <Door hingeX={-DOOR_GAP_HALF_W} openSign={1} progressRef={progressRef} />
       <Door hingeX={DOOR_GAP_HALF_W} openSign={-1} progressRef={progressRef} />
+    </group>
+  )
+}
+
+// The charbagh-style garden in front of the entrance — a central reflecting
+// pool flanked by lawns and a line of trimmed hedges — that the camera
+// travels straight down the middle of during the approach stage.
+function Garden() {
+  const hedgeZs = useMemo(() => {
+    const zs = []
+    for (let z = 14; z <= 60; z += 5) zs.push(z)
+    return zs
+  }, [])
+
+  return (
+    <group>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 38]} receiveShadow>
+        <planeGeometry args={[2.6, 56]} />
+        <meshStandardMaterial color="#17323a" roughness={0.15} metalness={0.4} />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <mesh key={side} rotation={[-Math.PI / 2, 0, 0]} position={[side * 6, 0.02, 38]} receiveShadow>
+          <planeGeometry args={[7, 56]} />
+          <meshStandardMaterial color="#3b4a30" roughness={1} />
+        </mesh>
+      ))}
+      {hedgeZs.map((z) =>
+        [-1, 1].map((side) => (
+          <mesh key={`${z}-${side}`} position={[side * 4.3, 0.55, z]} castShadow receiveShadow>
+            <coneGeometry args={[0.55, 1.1, 10]} />
+            <meshStandardMaterial color="#2c3a24" roughness={0.9} />
+          </mesh>
+        )),
+      )}
     </group>
   )
 }
@@ -176,7 +256,7 @@ function Interior({ progressRef }) {
     <group ref={group} position={[0, 0, -6]}>
       <mesh position={[0, 3, -3]} receiveShadow>
         <boxGeometry args={[DOOR_GAP_HALF_W * 2.6, 6, 0.4]} />
-        <meshStandardMaterial color="#1c120f" roughness={0.9} />
+        <meshStandardMaterial color="#efe8d8" roughness={0.9} />
       </mesh>
       <mesh position={[0, 0.02, -1]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <circleGeometry args={[1.6, 32]} />
@@ -184,7 +264,7 @@ function Interior({ progressRef }) {
       </mesh>
       <mesh position={[0, 0.5, -1]} castShadow receiveShadow>
         <cylinderGeometry args={[0.32, 0.38, 1, 16]} />
-        <meshStandardMaterial color="#4a3420" roughness={0.6} />
+        <meshStandardMaterial {...MARBLE_SHADOW} />
       </mesh>
       <mesh position={[0, 1.02, -1]} castShadow>
         <boxGeometry args={[0.7, 0.06, 0.7]} />
@@ -201,10 +281,10 @@ function Interior({ progressRef }) {
 
 function CameraRig({ progressRef }) {
   const { camera } = useThree()
-  const start = useMemo(() => new THREE.Vector3(0, 6, 46), [])
+  const start = useMemo(() => new THREE.Vector3(0, 9, 92), [])
   const approachEnd = useMemo(() => new THREE.Vector3(0, 2.4, 5.5), [])
   const insideEnd = useMemo(() => new THREE.Vector3(0, 1.9, -4.2), [])
-  const lookStart = useMemo(() => new THREE.Vector3(0, 5, 0), [])
+  const lookStart = useMemo(() => new THREE.Vector3(0, 6, 20), [])
   const lookEnd = useMemo(() => new THREE.Vector3(0, 1.6, -6), [])
   const pos = useMemo(() => new THREE.Vector3(), [])
   const look = useMemo(() => new THREE.Vector3(), [])
@@ -222,25 +302,31 @@ function CameraRig({ progressRef }) {
   return null
 }
 
+function Ground() {
+  const groundMat = useSandstone(24, 24)
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -2]} receiveShadow>
+      <planeGeometry args={[160, 160]} />
+      <meshStandardMaterial {...groundMat} color="#8a6a52" />
+    </mesh>
+  )
+}
+
 export default function MosqueScene({ progressRef }) {
   return (
     <>
       <CameraRig progressRef={progressRef} />
       <hemisphereLight args={['#4a3a6b', '#5a3d42', 1]} />
-      <directionalLight position={[8, 10, 6]} intensity={1.4} color="#f6c983" castShadow />
+      <directionalLight position={[8, 14, 10]} intensity={1.3} color="#f6c983" castShadow />
       <pointLight position={[0, 1.6, -5]} intensity={1.2} color="#f0cf7a" distance={6} />
       {/* Fades distant geometry (mainly the ground, which otherwise reaches
           all the way to the horizon) into the sky's own dusk tone, instead
           of a hard seam where the flat ground color meets the CSS gradient
-          sky behind the transparent canvas. A short near distance also lifts
-          the foreground ground out of near-black. */}
-      <fog attach="fog" args={['#79395d', 4, 70]} />
+          sky behind the transparent canvas. */}
+      <fog attach="fog" args={['#79395d', 6, 150]} />
 
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -2]} receiveShadow>
-        <planeGeometry args={[120, 120]} />
-        <meshStandardMaterial color="#5c3d45" roughness={1} />
-      </mesh>
-
+      <Ground />
+      <Garden />
       <Facade progressRef={progressRef} />
       <Interior progressRef={progressRef} />
     </>
