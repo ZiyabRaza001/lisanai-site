@@ -44,11 +44,24 @@
 .navbar__logo-text {
   font-size: 20px;
   font-weight: 800;
-  color: var(--text-primary);
+  color: white;
   letter-spacing: -0.5px;
+  transition: var(--transition-slow);
 }
 
 .navbar__logo-text span {
+  color: var(--primary-light);
+  transition: var(--transition-slow);
+}
+
+/* The hero behind this navbar opens on a dark mosque-at-dusk scene, so the
+   unscrolled navbar needs light text — .navbar--scrolled (white background,
+   triggered almost as soon as any scrolling starts) switches back to dark. */
+.navbar--scrolled .navbar__logo-text {
+  color: var(--text-primary);
+}
+
+.navbar--scrolled .navbar__logo-text span {
   color: var(--secondary);
 }
 
@@ -64,8 +77,12 @@
   border-radius: var(--radius);
   font-size: 15px;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.85);
   transition: var(--transition);
+}
+
+.navbar--scrolled .navbar__link {
+  color: var(--text-secondary);
 }
 
 .navbar__link:hover {
@@ -107,10 +124,14 @@
   display: block;
   width: 22px;
   height: 2px;
-  background: var(--text-primary);
+  background: white;
   border-radius: 2px;
   transition: var(--transition);
   transform-origin: center;
+}
+
+.navbar--scrolled .navbar__burger span {
+  background: var(--text-primary);
 }
 
 .navbar__burger--open span:nth-child(1) {
@@ -141,6 +162,9 @@
     gap: 4px;
     border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-md);
+    /* This dropdown always has a white background once open, regardless of
+       whether the top navbar itself is in its light-text (unscrolled) or
+       dark-text (scrolled) state — so its links must always be dark. */
     transform: translateY(-20px);
     opacity: 0;
     pointer-events: none;
@@ -156,6 +180,7 @@
   .navbar__link {
     padding: 12px 16px;
     border-radius: var(--radius);
+    color: var(--text-secondary);
   }
 
   .navbar__cta--mobile {
@@ -169,4 +194,16 @@
   .navbar__actions > .btn-primary {
     display: none;
   }
+}
+
+/* Reduced-motion visitors skip the mosque intro entirely (Hero.css) and see
+   the normal light-background content immediately — the unscrolled navbar's
+   light text (meant for the dark sky scene) would be invisible against it,
+   and since they may never scroll past 20px, .navbar--scrolled might never
+   kick in to fix it on its own. */
+@media (prefers-reduced-motion: reduce) {
+  .navbar__logo-text { color: var(--text-primary); }
+  .navbar__logo-text span { color: var(--secondary); }
+  .navbar__link { color: var(--text-secondary); }
+  .navbar__burger span { background: var(--text-primary); }
 }

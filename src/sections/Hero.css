@@ -1,55 +1,191 @@
+/* ───────────────────────── Scroll-pinned mosque intro ─────────────────────────
+   .hero is tall (380vh) purely to give the sequence scroll distance to play
+   out over. .hero__pin is the sticky 100vh viewport that stays in place
+   while that distance scrolls past. Live --p-* custom properties (written
+   by the scroll listener in Hero.jsx) drive every animated value below via
+   calc() — defaults here represent the fully-revealed end state, so a
+   visitor whose JS hasn't run yet (or who has prefers-reduced-motion) sees
+   the normal Hero content immediately rather than a static mosque. */
+
 .hero {
   position: relative;
-  min-height: 100vh;
+  height: 380vh;
+}
+
+.hero__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 640px;
   display: flex;
   align-items: center;
   padding: 120px 0 80px;
   overflow: hidden;
+  --p-dist: 1;
+  --p-door: 1;
+  --p-inside: 1;
+  --p-zoom: 1;
+  --p-content: 1;
 }
 
-.hero__bg {
+/* ── The illustrated scene — fades out entirely once the real content takes over ── */
+
+.hero__scene {
   position: absolute;
   inset: 0;
   z-index: 0;
+  overflow: hidden;
+  opacity: calc(1 - var(--p-content));
+  pointer-events: none;
 }
 
-.hero__bg-gradient {
+.hero__sky {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 40%, #F0FDFA 100%);
+  background: linear-gradient(180deg, #170f29 0%, #3b2150 22%, #79395d 45%, #c0694e 65%, #e89260 80%, #f6c983 100%);
 }
 
-.hero__bg-grid {
+.hero__sun {
   position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(37, 211, 102, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(37, 211, 102, 0.06) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-.hero__blob {
-  position: absolute;
+  top: 20%;
+  left: 50%;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.45;
+  background: radial-gradient(circle, rgba(255, 226, 173, 0.95), rgba(255, 180, 120, 0.45) 55%, transparent 75%);
+  transform: translate(-50%, -50%);
 }
 
-.hero__blob--1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(37, 211, 102, 0.35), transparent 70%);
-  top: -100px;
-  right: -100px;
+.hero__ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 18%;
+  background: linear-gradient(180deg, #2b1f30 0%, #120c17 100%);
 }
 
-.hero__blob--2 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(7, 94, 84, 0.2), transparent 70%);
-  bottom: -50px;
-  left: 10%;
+/* Decorative geometric overlay, barely-there texture across the whole scene */
+.hero__pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image:
+    repeating-linear-gradient(45deg, #f6c983 0 1px, transparent 1px 34px),
+    repeating-linear-gradient(-45deg, #f6c983 0 1px, transparent 1px 34px);
+  mix-blend-mode: overlay;
 }
+
+/* ── The mosque: approaches (scales up) as --p-dist rises, exterior fades as --p-zoom rises ── */
+
+.hero__mosque {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  width: min(640px, 70vw);
+  aspect-ratio: 800 / 600;
+  transform: translateX(-50%) scale(calc(0.45 + var(--p-dist) * 0.85));
+  transform-origin: 50% 100%;
+}
+
+.hero__mosque-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  opacity: calc(1 - var(--p-zoom));
+  transition: opacity 0.1s linear;
+}
+
+.hero__m-domeglow { fill: rgba(242, 207, 143, 0.2); }
+.hero__m-body,
+.hero__m-minaret,
+.hero__m-minaret-cap,
+.hero__m-parapet,
+.hero__m-dome { fill: #10201c; }
+.hero__m-minaret-top,
+.hero__m-finial { fill: #e3b86a; }
+.hero__m-finial-tip { fill: #f2cf8f; }
+.hero__m-arch { fill: #05100e; }
+
+/* ── Interior: hidden behind the closed doors, fades/scales in as they open ── */
+
+.hero__interior {
+  position: absolute;
+  inset: 0;
+  opacity: var(--p-inside);
+  transform: scale(calc(1 + var(--p-zoom) * 2.4));
+  transform-origin: 50% 82%;
+  transition: opacity 0.1s linear;
+  /* Keeps the interior confined to exactly the doors' own rectangular
+     footprint (top:60% height:33% of the shared 800x600 viewBox, same as
+     .hero__door below) rather than the full pointed-arch recess above
+     them — a rectangular clip matching the doors reads correctly at any
+     scale; one matching the curved arch top would fight the dome/parapet
+     shapes around it once this layer scales up during the zoom stage. */
+  clip-path: inset(60% 40% 7% 40%);
+}
+
+.hero__interior-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero__i-arch { fill: #1a1210; }
+.hero__i-rug { fill: #7a2f2f; opacity: 0.55; }
+
+.hero__stand {
+  position: absolute;
+  left: 50%;
+  bottom: 13%;
+  transform: translateX(-50%);
+}
+
+.hero__mini-phone {
+  width: 26px;
+  height: 50px;
+  background: #0c1a17;
+  border: 2px solid #e3b86a;
+  border-radius: 6px;
+  box-shadow: 0 0 16px 4px rgba(227, 184, 106, 0.55), 0 6px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Doors: hinged at their outer edge, swing open as --p-door rises ── */
+
+.hero__door {
+  position: absolute;
+  top: 60%;
+  height: 33%;
+  width: 10%;
+  background-image:
+    linear-gradient(160deg, #3b2113, #1f0f08),
+    repeating-linear-gradient(45deg, rgba(227, 184, 106, 0.14) 0 2px, transparent 2px 18px),
+    repeating-linear-gradient(-45deg, rgba(227, 184, 106, 0.14) 0 2px, transparent 2px 18px);
+  box-shadow: inset 0 0 0 2px rgba(227, 184, 106, 0.35);
+  opacity: calc(1 - var(--p-zoom));
+  backface-visibility: hidden;
+  transition: opacity 0.1s linear;
+}
+
+.hero__door--left {
+  left: 40%;
+  transform-origin: left center;
+  transform: perspective(900px) rotateY(calc(var(--p-door) * -92deg));
+}
+
+.hero__door--right {
+  left: 50%;
+  transform-origin: right center;
+  transform: perspective(900px) rotateY(calc(var(--p-door) * 92deg));
+}
+
+/* ───────────────────────────── Real Hero content ─────────────────────────────
+   Cross-fades in over the scene as --p-content rises from 0 to 1. Everything
+   below this point is the original Hero content/layout, unchanged. */
 
 .hero__inner {
   position: relative;
@@ -58,6 +194,10 @@
   grid-template-columns: 1fr 1fr;
   gap: 80px;
   align-items: center;
+  width: 100%;
+  opacity: var(--p-content);
+  transform: translateY(calc((1 - var(--p-content)) * 24px));
+  transition: opacity 0.1s linear;
 }
 
 .hero__content {
@@ -394,7 +534,16 @@
 }
 
 @media (max-width: 480px) {
-  .hero { padding: 100px 0 60px; }
   .hero__phone { width: 260px; height: 500px; }
   .hero__stat { display: none; }
+}
+
+/* Visitors who've asked for less motion get the content immediately, no
+   pinned scroll sequence at all — Hero.jsx skips attaching the scroll
+   listener in this case, so --p-* stay at their "revealed" defaults and
+   this override just collapses the now-unused scroll distance. */
+@media (prefers-reduced-motion: reduce) {
+  .hero { height: auto; }
+  .hero__pin { position: relative; height: auto; min-height: 0; }
+  .hero__scene { display: none; }
 }
