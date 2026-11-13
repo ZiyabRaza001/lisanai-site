@@ -1,11 +1,10 @@
-/* ───────────────────────── Scroll-pinned mosque intro ─────────────────────────
-   .hero is tall (380vh) purely to give the sequence scroll distance to play
-   out over. .hero__pin is the sticky 100vh viewport that stays in place
-   while that distance scrolls past. Live --p-* custom properties (written
-   by the scroll listener in Hero.jsx) drive every animated value below via
-   calc() — defaults here represent the fully-revealed end state, so a
-   visitor whose JS hasn't run yet (or who has prefers-reduced-motion) sees
-   the normal Hero content immediately rather than a static mosque. */
+/* ───────────────────────── Scroll-pinned 3D mosque intro ─────────────────────────
+   .hero is tall (380vh) purely to give the walk-through scroll distance to
+   play out over. .hero__pin is the sticky 100vh viewport that stays in
+   place while that distance scrolls past. The 3D scene (MosqueScene.jsx)
+   reads scroll progress every frame from a plain ref, not from CSS — only
+   --p-content (the final content crossfade) is written here as a CSS
+   custom property, since that part is a plain DOM opacity transition. */
 
 .hero {
   position: relative;
@@ -17,193 +16,81 @@
   top: 0;
   height: 100vh;
   min-height: 640px;
-  display: flex;
-  align-items: center;
-  padding: 120px 0 80px;
   overflow: hidden;
-  --p-dist: 1;
-  --p-door: 1;
-  --p-inside: 1;
-  --p-zoom: 1;
-  --p-content: 1;
-}
-
-/* ── The illustrated scene — fades out entirely once the real content takes over ── */
-
-.hero__scene {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  opacity: calc(1 - var(--p-content));
-  pointer-events: none;
+  --p-content: 0;
 }
 
 .hero__sky {
   position: absolute;
   inset: 0;
+  z-index: 0;
   background: linear-gradient(180deg, #170f29 0%, #3b2150 22%, #79395d 45%, #c0694e 65%, #e89260 80%, #f6c983 100%);
 }
 
-.hero__sun {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 226, 173, 0.95), rgba(255, 180, 120, 0.45) 55%, transparent 75%);
-  transform: translate(-50%, -50%);
-}
-
-.hero__ground {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 18%;
-  background: linear-gradient(180deg, #2b1f30 0%, #120c17 100%);
-}
-
-/* Decorative geometric overlay, barely-there texture across the whole scene */
-.hero__pattern {
+.hero__canvas-wrap {
   position: absolute;
   inset: 0;
-  opacity: 0.08;
-  background-image:
-    repeating-linear-gradient(45deg, #f6c983 0 1px, transparent 1px 34px),
-    repeating-linear-gradient(-45deg, #f6c983 0 1px, transparent 1px 34px);
-  mix-blend-mode: overlay;
+  z-index: 1;
+  opacity: calc(1 - var(--p-content));
+  pointer-events: none;
 }
 
-/* ── The mosque: approaches (scales up) as --p-dist rises, exterior fades as --p-zoom rises ── */
-
-.hero__mosque {
-  position: absolute;
-  left: 50%;
-  bottom: 18%;
-  width: min(640px, 70vw);
-  aspect-ratio: 800 / 600;
-  transform: translateX(-50%) scale(calc(0.45 + var(--p-dist) * 0.85));
-  transform-origin: 50% 100%;
+.hero__canvas-wrap canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
-.hero__mosque-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  opacity: calc(1 - var(--p-zoom));
-  transition: opacity 0.1s linear;
-}
-
-.hero__m-domeglow { fill: rgba(242, 207, 143, 0.2); }
-.hero__m-body,
-.hero__m-minaret,
-.hero__m-minaret-cap,
-.hero__m-parapet,
-.hero__m-dome { fill: #10201c; }
-.hero__m-minaret-top,
-.hero__m-finial { fill: #e3b86a; }
-.hero__m-finial-tip { fill: #f2cf8f; }
-.hero__m-arch { fill: #05100e; }
-
-/* ── Interior: hidden behind the closed doors, fades/scales in as they open ── */
-
-.hero__interior {
-  position: absolute;
-  inset: 0;
-  opacity: var(--p-inside);
-  transform: scale(calc(1 + var(--p-zoom) * 2.4));
-  transform-origin: 50% 82%;
-  transition: opacity 0.1s linear;
-  /* Keeps the interior confined to exactly the doors' own rectangular
-     footprint (top:60% height:33% of the shared 800x600 viewBox, same as
-     .hero__door below) rather than the full pointed-arch recess above
-     them — a rectangular clip matching the doors reads correctly at any
-     scale; one matching the curved arch top would fight the dome/parapet
-     shapes around it once this layer scales up during the zoom stage. */
-  clip-path: inset(60% 40% 7% 40%);
-}
-
-.hero__interior-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.hero__i-arch { fill: #1a1210; }
-.hero__i-rug { fill: #7a2f2f; opacity: 0.55; }
-
-.hero__stand {
-  position: absolute;
-  left: 50%;
-  bottom: 13%;
-  transform: translateX(-50%);
-}
-
-.hero__mini-phone {
-  width: 26px;
-  height: 50px;
-  background: #0c1a17;
-  border: 2px solid #e3b86a;
-  border-radius: 6px;
-  box-shadow: 0 0 16px 4px rgba(227, 184, 106, 0.55), 0 6px 10px rgba(0, 0, 0, 0.4);
-}
-
-/* ── Doors: hinged at their outer edge, swing open as --p-door rises ── */
-
-.hero__door {
-  position: absolute;
-  top: 60%;
-  height: 33%;
-  width: 10%;
-  background-image:
-    linear-gradient(160deg, #3b2113, #1f0f08),
-    repeating-linear-gradient(45deg, rgba(227, 184, 106, 0.14) 0 2px, transparent 2px 18px),
-    repeating-linear-gradient(-45deg, rgba(227, 184, 106, 0.14) 0 2px, transparent 2px 18px);
-  box-shadow: inset 0 0 0 2px rgba(227, 184, 106, 0.35);
-  opacity: calc(1 - var(--p-zoom));
-  backface-visibility: hidden;
-  transition: opacity 0.1s linear;
-}
-
-.hero__door--left {
-  left: 40%;
-  transform-origin: left center;
-  transform: perspective(900px) rotateY(calc(var(--p-door) * -92deg));
-}
-
-.hero__door--right {
-  left: 50%;
-  transform-origin: right center;
-  transform: perspective(900px) rotateY(calc(var(--p-door) * 92deg));
+/* The phone, anchored inside the 3D scene via drei's <Html transform> —
+   scaled/positioned to match the WebGL camera each frame, so it reads as a
+   real object sitting inside the mosque rather than a flat sticker. */
+.hero__mosque-phone {
+  pointer-events: none;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
 }
 
 /* ───────────────────────────── Real Hero content ─────────────────────────────
-   Cross-fades in over the scene as --p-content rises from 0 to 1. Everything
-   below this point is the original Hero content/layout, unchanged. */
+   Overlaid on top of the canvas, screen-space (not 3D-anchored) — cross-fades
+   in as --p-content rises from 0 to 1 while the scene fades out behind it. */
 
-.hero__inner {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
-  width: 100%;
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 120px 0 56px;
   opacity: var(--p-content);
   transform: translateY(calc((1 - var(--p-content)) * 24px));
   transition: opacity 0.1s linear;
+  pointer-events: none;
 }
 
-.hero__content {
+.hero__top,
+.hero__bottom {
+  pointer-events: auto;
+}
+
+.hero__top {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  align-items: center;
+  gap: 18px;
+}
+
+.hero__bottom {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
 .hero__badge {
@@ -218,7 +105,6 @@
   font-weight: 700;
   color: var(--secondary);
   box-shadow: var(--shadow-sm);
-  width: fit-content;
 }
 
 .hero__badge svg {
@@ -226,15 +112,16 @@
 }
 
 .hero__title {
-  font-size: clamp(38px, 5vw, 62px);
+  font-size: clamp(32px, 4.4vw, 54px);
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: -1.5px;
-  color: var(--text-primary);
+  color: white;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
 }
 
 .hero__title-accent {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -243,15 +130,17 @@
 }
 
 .hero__subtitle {
-  font-size: 18px;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  max-width: 500px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 480px;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
 }
 
 .hero__capabilities {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
 }
 
@@ -260,25 +149,19 @@
   align-items: center;
   gap: 5px;
   padding: 6px 12px;
-  background: white;
+  background: rgba(255, 255, 255, 0.92);
   border: 1px solid var(--border);
   border-radius: var(--radius-full);
   font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
   box-shadow: var(--shadow-sm);
-  transition: var(--transition);
-}
-
-.hero__cap:hover {
-  border-color: var(--primary);
-  color: var(--secondary);
-  background: rgba(37, 211, 102, 0.05);
 }
 
 .hero__cta-group {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
 }
 
@@ -286,6 +169,7 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .hero__cta-main {
@@ -295,44 +179,38 @@
 .hero__reassurance {
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* Phone mockup */
-.hero__visual {
-  position: relative;
-  height: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* ── Phone mockup — reused by the 3D scene (as Html content) and by the
+   reduced-motion static fallback below ── */
 
 .hero__phone {
-  width: 290px;
-  height: 560px;
+  width: 240px;
+  height: 460px;
   background: #111;
-  border-radius: 44px;
-  padding: 12px;
+  border-radius: 38px;
+  padding: 10px;
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.1),
     0 40px 80px rgba(0,0,0,0.35),
     inset 0 0 0 1px rgba(255,255,255,0.05);
   position: relative;
-  z-index: 1;
 }
 
 .hero__phone-notch {
-  width: 90px;
-  height: 24px;
+  width: 76px;
+  height: 20px;
   background: #111;
-  border-radius: 0 0 16px 16px;
+  border-radius: 0 0 14px 14px;
   margin: 0 auto 4px;
 }
 
 .hero__phone-screen {
   background: var(--wa-bubble);
-  border-radius: 34px;
-  height: calc(100% - 28px);
+  border-radius: 29px;
+  height: calc(100% - 24px);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -340,39 +218,39 @@
 
 .hero__wa-header {
   background: var(--wa-teal);
-  padding: 12px 14px 10px;
+  padding: 10px 12px 8px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
 .hero__wa-back {
   color: rgba(255,255,255,0.7);
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .hero__wa-avatar {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   background: var(--primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 15px;
   flex-shrink: 0;
 }
 
 .hero__wa-name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: white;
   line-height: 1;
 }
 
 .hero__wa-status {
-  font-size: 11px;
+  font-size: 10px;
   color: rgba(255,255,255,0.65);
   margin-top: 2px;
 }
@@ -380,10 +258,10 @@
 .hero__wa-chat {
   flex: 1;
   overflow-y: auto;
-  padding: 10px 8px;
+  padding: 8px 7px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   scrollbar-width: none;
 }
 
@@ -391,7 +269,6 @@
 
 .hero__wa-msg {
   display: flex;
-  animation: fadeInUp 0.4s ease both;
 }
 
 .hero__wa-msg--bot {
@@ -404,10 +281,10 @@
 
 .hero__wa-bubble {
   max-width: 85%;
-  padding: 7px 10px 4px;
-  border-radius: 10px;
-  font-size: 11.5px;
-  line-height: 1.45;
+  padding: 6px 9px 4px;
+  border-radius: 9px;
+  font-size: 10.5px;
+  line-height: 1.4;
   position: relative;
   white-space: pre-line;
 }
@@ -428,7 +305,7 @@
 
 .hero__wa-time {
   display: block;
-  font-size: 9.5px;
+  font-size: 8.5px;
   color: rgba(0,0,0,0.4);
   text-align: right;
   margin-top: 2px;
@@ -436,25 +313,25 @@
 
 .hero__wa-input {
   background: white;
-  margin: 6px 8px 8px;
-  border-radius: 24px;
-  padding: 10px 8px 10px 14px;
+  margin: 5px 7px 7px;
+  border-radius: 20px;
+  padding: 8px 7px 8px 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   flex-shrink: 0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .hero__wa-placeholder {
   flex: 1;
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(0,0,0,0.35);
 }
 
 .hero__wa-send {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   background: var(--wa-teal);
   border-radius: 50%;
   display: flex;
@@ -463,87 +340,40 @@
   flex-shrink: 0;
 }
 
-/* Floating stat cards */
-.hero__stat {
-  position: absolute;
-  background: white;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  border: 1px solid var(--border);
-  padding: 14px 18px;
+/* ───────────────────────────── Reduced-motion fallback ─────────────────────────────
+   No scroll-pinned sequence, no WebGL at all — just the content, immediately,
+   as if this were a plain static Hero. */
+
+.hero--static {
+  height: auto;
+  padding: 120px 0 64px;
+  background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 40%, #F0FDFA 100%);
+}
+
+.hero__static-inner {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  z-index: 2;
+  gap: 28px;
+  text-align: center;
 }
 
-.hero__stat--1 {
-  top: 50px;
-  right: -10px;
-  animation: float 3.2s ease-in-out infinite;
-}
-
-.hero__stat--2 {
-  bottom: 90px;
-  left: -20px;
-  animation: float 3.8s ease-in-out infinite 0.6s;
-}
-
-.hero__stat--3 {
-  bottom: 20px;
-  right: 20px;
-  animation: float 3.5s ease-in-out infinite 0.3s;
-}
-
-.hero__stat-icon { font-size: 26px; }
-
-.hero__stat-val {
-  font-size: 18px;
-  font-weight: 800;
+.hero--static .hero__title,
+.hero--static .hero__subtitle,
+.hero--static .hero__reassurance {
   color: var(--text-primary);
-  line-height: 1;
+  text-shadow: none;
 }
 
-.hero__stat-lbl {
-  font-size: 11px;
+.hero--static .hero__subtitle {
   color: var(--text-secondary);
-  margin-top: 3px;
 }
 
-@media (max-width: 1024px) {
-  .hero__inner {
-    grid-template-columns: 1fr;
-    gap: 60px;
-    text-align: center;
-  }
-
-  .hero__subtitle,
-  .hero__badge {
-    margin: 0 auto;
-  }
-
-  .hero__capabilities,
-  .hero__actions {
-    justify-content: center;
-  }
-
-  .hero__visual { height: 480px; }
-  .hero__stat--1 { right: 10px; }
-  .hero__stat--2 { left: 10px; }
-  .hero__stat--3 { right: 10px; }
+.hero--static .hero__reassurance {
+  color: var(--text-muted);
 }
 
-@media (max-width: 480px) {
-  .hero__phone { width: 260px; height: 500px; }
-  .hero__stat { display: none; }
-}
-
-/* Visitors who've asked for less motion get the content immediately, no
-   pinned scroll sequence at all — Hero.jsx skips attaching the scroll
-   listener in this case, so --p-* stay at their "revealed" defaults and
-   this override just collapses the now-unused scroll distance. */
-@media (prefers-reduced-motion: reduce) {
-  .hero { height: auto; }
-  .hero__pin { position: relative; height: auto; min-height: 0; }
-  .hero__scene { display: none; }
+@media (max-width: 640px) {
+  .hero__overlay { padding: 100px 0 40px; }
+  .hero__phone { width: 200px; height: 400px; }
 }
